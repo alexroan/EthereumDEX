@@ -30,6 +30,7 @@ contract Token {
     }
 
     function approve(address _spender, uint256 _value) public returns (bool success) {
+        require(_spender != address(0), "Cannot be null address");
         allowance[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         return true;
