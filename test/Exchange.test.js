@@ -62,7 +62,51 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
         });
 
         describe('failure', () => {
+            //TODO
+        });
 
+    });
+
+    describe('withdrawing ether', () => {
+        let result;
+        let amount;
+        let balance;
+
+        beforeEach(async () => {
+            amount = ether(1);
+            result = await exchange.depositEther({from: user1, value: amount});
+        });
+
+        describe('sucess', () => {
+
+            beforeEach(async () => {
+                result = await exchange.withdrawEther(amount, {from: user1});
+            });
+
+            it('allows withdrawal', async () => {
+                balance = await exchange.tokens(ETHER_ADDRESS, user1);
+                balance.toString().should.equal("0");
+            });
+
+            it('emits a withdraw event', async () => {
+                it('emits a withdraw event', async () => {
+                    let eventLog = result.logs[0];
+                    eventLog.event.should.equal('Withdraw');
+                    let args = eventLog.args;
+                    args._token.should.equal(ETHER_ADDRESS);
+                    args._user.should.equal(user1);
+                    args._amount.toString().should.equal(amount.toString());
+                    args._balance.toString().should.equal(amount.toString());
+                });
+            });
+
+        });
+
+        describe('failure', () => {
+            it('rejects invalid amount', async () => {
+                result = await exchange.withdrawEther(tokens(100), {from: user1})
+                    .should.be.rejectedWith(EVM_REVERT);
+            });
         });
 
     });
@@ -96,6 +140,11 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
                 args._amount.toString().should.equal(amount.toString());
                 args._balance.toString().should.equal(amount.toString());
             });
+
+            it('returns the current balance', async () => {
+                let balance = await exchange.balanceOf(token.address, user1);
+                balance.toString().should.equal(amount.toString());
+            });
         });
 
         describe('failure', () => {
@@ -106,6 +155,51 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
 
             it('rejects ether deposits', async () => {
                 result = await exchange.depositToken(ETHER_ADDRESS, amount, {from: user1})
+                    .should.be.rejectedWith(EVM_REVERT);
+            });
+        });
+
+    });
+
+    describe('withdrawing tokens', () => {
+        let result;
+        let amount;
+        let balance;
+
+        beforeEach(async () => {
+            amount = tokens(10);
+                await token.approve(exchange.address, amount, {from: user1});
+                result = await exchange.depositToken(token.address, amount, {from: user1});
+        });
+
+        describe('sucess', () => {
+
+            beforeEach(async () => {
+                result = await exchange.withdrawToken(token.address, amount, {from: user1});
+            });
+
+            it('allows withdrawal', async () => {
+                balance = await exchange.tokens(token.address, user1);
+                balance.toString().should.equal("0");
+            });
+
+            it('emits a withdraw event', async () => {
+                it('emits a withdraw event', async () => {
+                    let eventLog = result.logs[0];
+                    eventLog.event.should.equal('Withdraw');
+                    let args = eventLog.args;
+                    args._token.should.equal(token.address);
+                    args._user.should.equal(user1);
+                    args._amount.toString().should.equal(amount.toString());
+                    args._balance.toString().should.equal(amount.toString());
+                });
+            });
+
+        });
+
+        describe('failure', () => {
+            it('rejects invalid amount', async () => {
+                result = await exchange.withdrawToken(token.address, tokens(100), {from: user1})
                     .should.be.rejectedWith(EVM_REVERT);
             });
         });
