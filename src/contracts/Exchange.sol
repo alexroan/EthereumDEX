@@ -59,7 +59,7 @@ contract Exchange {
 
     function _trade(uint256 _id, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive) internal {
         //charge fees - taken from filler of order (msg.sender)
-        uint256 _feeAmount = _amountGive.mul(feePercent).div(100);
+        uint256 _feeAmount = _amountGet.mul(feePercent).div(100);
         //DO TRADE
         //msg.sender is the person filling order, _user the person who made the order
         //move order fillers tokens to order maker, whilst subtracting fees from filler
