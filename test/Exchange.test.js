@@ -7,7 +7,7 @@ require('chai')
     .use(require('chai-as-promised'))
     .should();
 
-contract('Exchange', ([deployer, feeAccount, user1]) => {
+contract('Exchange', ([deployer, feeAccount, user1, user2]) => {
     let exchange;
     let feePercent = 10;
     let token;
@@ -250,36 +250,101 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
         let amountGet = tokens(1);
         let amountGive = ether(1);
         beforeEach(async () => {
+            //user 1 deposit either to exchange
             await exchange.depositEther({from: user1, value: ether(1)});
+            //deployer give user2 100 tokens
+            await token.transfer(user2, tokens(100), {from: deployer});
+            //user2 approve and deposit 2 tokens to exchange
+            await token.approve(exchange.address, tokens(2), {from: user2});
+            await exchange.depositToken(token.address, tokens(2), {from: user2});
+            //user1 make order
             await exchange.makeOrder(token.address, amountGet, ETHER_ADDRESS, amountGive, {from:user1});
         });
 
-        describe('success', () => {
-            beforeEach(async () => {
-                result = await exchange.cancelOrder(1, {from:user1});
-            });
+        describe('filling orders', () => {
+            describe('success', () => {
+                beforeEach(async () => {
+                    result = await exchange.fillOrder(1, {from: user2});
+                });
 
-            it('updates cancelled orders', async () => {
-                const orderCancelled = await exchange.orderCancelled(1);
-                orderCancelled.should.equal(true);
-            });
+                it('executes the trade and charges fees', async () => {
+                    let balance;
+                    balance = await exchange.balanceOf(token.address, user1);
+                    balance.toString().should.equal(tokens(1).toString(), 'user1 received tokens');
+                    balance = await exchange.balanceOf(ETHER_ADDRESS, user2);
+                    balance.toString().should.equal(ether(1).toString(), 'user2 received Ether');
+                    balance = await exchange.balanceOf(ETHER_ADDRESS, user1);
+                    balance.toString().should.equal('0', 'user1 Ether deducted');
+                    balance = await exchange.balanceOf(token.address, user2);
+                    balance.toString().should.equal(tokens(0.9).toString(), 'user2 tokens deducted with fee applied');
+                    const feeAccount = await exchange.feeAccount();
+                    balance = await exchange.balanceOf(token.address, feeAccount);
+                    balance.toString().should.equal(tokens(0.1).toString(), 'feeAccount received fee');
+                });
 
-            it('emits an cancel event', async () => {
-                let eventLog = result.logs[0];
-                eventLog.event.should.equal('Cancel');
-                let args = eventLog.args;
-                args._id.toString().should.equal("1", "id is correct");
-                args._user.should.equal(user1, "user is correct");
-                args._tokenGet.should.equal(token.address, "token get is correct");
-                args._amountGet.toString().should.equal(amountGet.toString(), "amount get is correct");
-                args._tokenGive.should.equal(ETHER_ADDRESS, "token give is correct");
-                args._amountGive.toString().should.equal(amountGive.toString(), "amount give is correct");
+                it('updates filled orders', async () => {
+                    const orderFilled = await exchange.orderFilled(1);
+                    orderFilled.should.equal(true);
+                });
+
+                it('emits a trade event', async () => {
+                    let eventLog = result.logs[0];
+                    eventLog.event.should.equal('Trade');
+                    let args = eventLog.args;
+                    args._id.toString().should.equal("1", "id is correct");
+                    args._user.should.equal(user1, "user is correct");
+                    args._tokenGet.should.equal(token.address, "token get is correct");
+                    args._amountGet.toString().should.equal(amountGet.toString(), "amount get is correct");
+                    args._tokenGive.should.equal(ETHER_ADDRESS, "token give is correct");
+                    args._amountGive.toString().should.equal(amountGive.toString(), "amount give is correct");
+                    args._userFill.should.equal(user2, "Fill user is correct");
+                });
+            });
+            describe('failure', () => {
+                it('rejects invalid order ids', async () => {
+                    await exchange.fillOrder(999).should.be.rejectedWith(EVM_REVERT);
+                });
+
+                it('rejects on cancelled orders', async () => {
+                    await exchange.cancelOrder(1, {from: user1});
+                    await exchange.fillOrder(1, {from: user2}).should.be.rejectedWith(EVM_REVERT);
+                });
+
+                it('rejects on orders already filled', async () => {
+                    await exchange.fillOrder(1, {from: user2});
+                    await exchange.fillOrder(1, {from: user2}).should.be.rejectedWith(EVM_REVERT);
+                });
             });
         });
 
-        describe('failure', async () => {
-            //TODO reject invalid user
-            //TODO reject invalid order id
-        });
+        describe('cancel an order', () => {
+            describe('success', () => {
+                beforeEach(async () => {
+                    result = await exchange.cancelOrder(1, {from:user1});
+                });
+    
+                it('updates cancelled orders', async () => {
+                    const orderCancelled = await exchange.orderCancelled(1);
+                    orderCancelled.should.equal(true);
+                });
+    
+                it('emits an cancel event', async () => {
+                    let eventLog = result.logs[0];
+                    eventLog.event.should.equal('Cancel');
+                    let args = eventLog.args;
+                    args._id.toString().should.equal("1", "id is correct");
+                    args._user.should.equal(user1, "user is correct");
+                    args._tokenGet.should.equal(token.address, "token get is correct");
+                    args._amountGet.toString().should.equal(amountGet.toString(), "amount get is correct");
+                    args._tokenGive.should.equal(ETHER_ADDRESS, "token give is correct");
+                    args._amountGive.toString().should.equal(amountGive.toString(), "amount give is correct");
+                });
+            });
+    
+            describe('failure', async () => {
+                //TODO reject invalid user
+                //TODO reject invalid order id
+            });
+        })
     });
 });
