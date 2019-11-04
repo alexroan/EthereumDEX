@@ -41,8 +41,8 @@ contract Exchange {
     function withdrawToken(address _tokenAddress, uint256 _amount) public {
         require(_tokenAddress != ETHER, "Token address not valid");
         require(tokens[_tokenAddress][msg.sender] >= _amount, "Not enough tokens");
-        require(Token(_tokenAddress).transfer(msg.sender, _amount), "Could not transfer");
         tokens[_tokenAddress][msg.sender] = tokens[_tokenAddress][msg.sender].sub(_amount);
+        require(Token(_tokenAddress).transfer(msg.sender, _amount), "Could not transfer");
         emit Withdraw(_tokenAddress, msg.sender, _amount, tokens[_tokenAddress][msg.sender]);
     }
 
