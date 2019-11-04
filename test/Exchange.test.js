@@ -16,7 +16,6 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
         exchange = await Exchange.new(feeAccount, feePercent);
         token = await Token.new();
         await token.transfer(user1, tokens(100), {from: deployer});
-        // console.log((await token.balanceOf(user1)).toString());
     });
 
     describe('deployment', () => {
@@ -48,15 +47,13 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
             });
 
             it('emits a deposit event', async () => {
-                it('emits a deposit event', async () => {
-                    let eventLog = result.logs[0];
-                    eventLog.event.should.equal('Deposit');
-                    let args = eventLog.args;
-                    args._token.should.equal(ETHER_ADDRESS);
-                    args._user.should.equal(user1);
-                    args._amount.toString().should.equal(amount.toString());
-                    args._balance.toString().should.equal(amount.toString());
-                });
+                let eventLog = result.logs[0];
+                eventLog.event.should.equal('Deposit');
+                let args = eventLog.args;
+                args._token.should.equal(ETHER_ADDRESS);
+                args._user.should.equal(user1);
+                args._amount.toString().should.equal(amount.toString());
+                args._balance.toString().should.equal(amount.toString());
             });
 
         });
@@ -211,6 +208,78 @@ contract('Exchange', ([deployer, feeAccount, user1]) => {
             //send transaction is the fallback function in JS
             await exchange.sendTransaction({from: deployer, value:ether(1)})
                 .should.be.rejectedWith(EVM_REVERT);
+        });
+    });
+
+    describe('make orders', () => {
+        let result;
+        let amountGet = tokens(1);
+        let amountGive = ether(1);        
+
+        beforeEach(async () => {
+            result = await exchange.makeOrder(token.address, amountGet, ETHER_ADDRESS, amountGive,{from: user1});
+        });
+
+        it('creates the new order', async () => {
+            const orderCount = await exchange.orderCount();
+            orderCount.toString().should.equal("1");
+            const order = await exchange.orders(orderCount);
+            order.id.toString().should.equal("1", "id is correct");
+            order.user.should.equal(user1, "user is correct");
+            order.tokenGet.should.equal(token.address, "token get is correct");
+            order.amountGet.toString().should.equal(amountGet.toString(), "amount get is correct");
+            order.tokenGive.should.equal(ETHER_ADDRESS, "token give is correct");
+            order.amountGive.toString().should.equal(amountGive.toString(), "amount give is correct");
+        });
+
+        it('emits an order event', async () => {
+            let eventLog = result.logs[0];
+            eventLog.event.should.equal('Order');
+            let args = eventLog.args;
+            args._id.toString().should.equal("1", "id is correct");
+            args._user.should.equal(user1, "user is correct");
+            args._tokenGet.should.equal(token.address, "token get is correct");
+            args._amountGet.toString().should.equal(amountGet.toString(), "amount get is correct");
+            args._tokenGive.should.equal(ETHER_ADDRESS, "token give is correct");
+            args._amountGive.toString().should.equal(amountGive.toString(), "amount give is correct");
+        });
+    });
+
+    describe('order actions', () => {
+        let result;
+        let amountGet = tokens(1);
+        let amountGive = ether(1);
+        beforeEach(async () => {
+            await exchange.depositEther({from: user1, value: ether(1)});
+            await exchange.makeOrder(token.address, amountGet, ETHER_ADDRESS, amountGive, {from:user1});
+        });
+
+        describe('success', () => {
+            beforeEach(async () => {
+                result = await exchange.cancelOrder(1, {from:user1});
+            });
+
+            it('updates cancelled orders', async () => {
+                const orderCancelled = await exchange.orderCancelled(1);
+                orderCancelled.should.equal(true);
+            });
+
+            it('emits an cancel event', async () => {
+                let eventLog = result.logs[0];
+                eventLog.event.should.equal('Cancel');
+                let args = eventLog.args;
+                args._id.toString().should.equal("1", "id is correct");
+                args._user.should.equal(user1, "user is correct");
+                args._tokenGet.should.equal(token.address, "token get is correct");
+                args._amountGet.toString().should.equal(amountGet.toString(), "amount get is correct");
+                args._tokenGive.should.equal(ETHER_ADDRESS, "token give is correct");
+                args._amountGive.toString().should.equal(amountGive.toString(), "amount give is correct");
+            });
+        });
+
+        describe('failure', async () => {
+            //TODO reject invalid user
+            //TODO reject invalid order id
         });
     });
 });
