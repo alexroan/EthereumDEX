@@ -19070,12 +19070,12 @@
         }
       },
       "links": {},
-      "address": "0x6d6dA03223Aa8d80A666B266021448e65f41f5E8",
-      "transactionHash": "0xb16b52fd41ab22d7972d385b3e07fdd0d6d73d2e0e26b2107920a21069f7c9cc"
+      "address": "0x691ca22Ea918794DD0f45D5F28E0Cd6Ccd80EcD7",
+      "transactionHash": "0xcffc00fd0e840c072e428588871720038a392535d2414d11aa0aafdc28ce2035"
     }
   },
   "schemaVersion": "3.0.16",
-  "updatedAt": "2019-11-04T22:58:30.650Z",
+  "updatedAt": "2019-11-06T18:17:15.527Z",
   "devdoc": {
     "methods": {}
   },
