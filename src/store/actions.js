@@ -25,3 +25,24 @@ export function exchangeLoaded(exchange){
         exchange
     }
 }
+
+export function cancelledOrdersLoaded(cancelledOrders){
+    return {
+        type: 'CANCELLED_ORDERS_LOADED',
+        cancelledOrders
+    }
+}
+
+export function ordersLoaded(orders){
+    return {
+        type: 'ORDERS_LOADED',
+        orders
+    }
+}
+
+export function tradesLoaded(trades){
+    return {
+        type: 'TRADES_LOADED',
+        trades
+    }
+}

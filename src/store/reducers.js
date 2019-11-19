@@ -23,11 +23,18 @@ function token(state = {}, action) {
 function exchange(state = {}, action) {
     switch (action.type) {
         case 'EXCHANGE_LOADED':
-            return { ...state, loaded: true, exchange: action.exchange};    
+            return { ...state, loaded: true, contract: action.exchange};
+        case 'CANCELLED_ORDERS_LOADED':
+                return { ...state, cancelledOrders: {loaded: true, data: action.cancelledOrders }};  
+        case 'ORDERS_LOADED':
+                return { ...state, orders: {loaded: true, data: action.orders }};      
+        case 'TRADES_LOADED':
+                return { ...state, trades: {loaded: true, data: action.trades }};      
         default:
             return state;
     }
-} 
+}
+
 
 const rootReducer = new combineReducers({
     web3,

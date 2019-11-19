@@ -17,12 +17,12 @@ class App extends Component {
 	async loadBlockchainData(dispatch) {
 		const web3 = loadWeb3(dispatch)
 		const networkId = await web3.eth.net.getId();
-		const account = loadAccount(web3, dispatch);
-		const token = loadToken(web3, networkId, dispatch);
+		const account = await loadAccount(web3, dispatch);
+		const token = await loadToken(web3, networkId, dispatch);
 		if (!token) {
 			alert('Token not loaded, please load a network with token');
 		}
-		const exchange = loadExchange(web3, networkId, dispatch);
+		const exchange = await loadExchange(web3, networkId, dispatch);
 		if (!exchange) {
 			alert('Exchange not loaded, please load a network with exchange');
 		}
