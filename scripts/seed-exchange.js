@@ -130,6 +130,9 @@ module.exports = async function(callback) {
       await wait(1)
     }
 
+    const tradeStream = await exchange.getPastEvents("Trade", {fromBlock: 0, toBlock: 'latest'});
+    const trades = tradeStream.map((event) => event.returnValues);
+    console.log("number of trade events", trades.length);
   }
   catch(error) {
     console.log(error)
