@@ -1,7 +1,6 @@
-import {get} from 'lodash';
+import {get, reject, groupBy} from 'lodash';
 import {createSelector} from 'reselect';
-import {ether, tokens, ETHER_ADDRESS, GREEN, RED} from '../helpers';
-import moment from 'moment';
+import {decorateTrades, decorateOrderBookOrders} from './decorators';
 
 const account = state => get(state, 'web3.account');
 export const accountSelector = createSelector(account, a => a);
@@ -51,50 +50,38 @@ export const tradesSelector = createSelector(
     } 
 );
 
-const decorateTrades = (orders) => {
-    let previousOrder = orders[0];
-    return(orders.map((order) => {
-        order = decorateOrder(order);
-        order = decorateFilledOrder(order, previousOrder);
-        previousOrder = order;
-        return order;
-    }));
-}
+//Return order that have not been traded (filled) or cancelled
+const openOrders = state => {
+    const all = orders(state);
+    const cancelled = cancelledOrders(state);
+    const filled = trades(state);
 
-//decorate objects to be readable from events
-const decorateOrder = (order) => {
-    let etherAmount, tokenAmount;
-    if(order._tokenGive === "0x0000000000000000000000000000000000000000") {
-        etherAmount = order._amountGive;
-        tokenAmount = order._amountGet;
-    }
-    else{
-        etherAmount = order._amountGet;
-        tokenAmount = order._amountGive;
-    }
-
-    const precision = 100000;
-    let tokenPrice = (etherAmount / tokenAmount);
-    tokenPrice = Math.round(tokenPrice * precision) / precision;
-
-    return({
-        ...order,
-        etherAmount: ether(etherAmount),
-        tokenAmount: tokens(tokenAmount),
-        tokenPrice,
-        formattedTimestamp: moment.unix(order._timestamp).format('h:mm:ss a M/D')
+    //reject the orders if they appear in filled or cancelled
+    const openOrders = reject(all, (order) => {
+        const orderFilled = filled.some((o) => o._id === order._id);
+        const orderCancelled = cancelled.some((o) => o._id === order._id);
+        return (orderFilled || orderCancelled);
     });
+    return openOrders;
 }
 
-//Specific decorator for filled orders only
-//If higher than previous = green, lower than previous = red
-const decorateFilledOrder = (order, previousOrder) => {
-    return ({
-        ...order,
-        tokenPriceClass: tokenPriceClass(order.tokenPrice, previousOrder)
-    });
-}
+const orderBookLoaded = state => cancelledOrdersLoaded(state) && ordersLoaded(state) && tradesLoaded(state);
+export const orderBookLoadedSelector = createSelector(orderBookLoaded, obl => obl);
 
-const tokenPriceClass = (price, previousOrder) => {
-    return (previousOrder.tokenPrice > price) ? RED : GREEN;
-}
+export const orderBookSelector = createSelector(
+    openOrders,
+    (orders) => {
+        //decorate
+        orders = decorateOrderBookOrders(orders);
+        //group by type
+        orders = groupBy(orders, 'orderType');
+        let buyOrders = get(orders, 'buy', []);
+        let sellOrders = get(orders, 'sell', []);
+        orders = {
+            ...orders,
+            buyOrders: buyOrders.sort((a, b) => b.tokenPrice - a.tokenPrice),
+            sellOrders: sellOrders.sort((a, b) => b.tokenPrice - a.tokenPrice)
+        }
+        return orders;
+    }
+)
