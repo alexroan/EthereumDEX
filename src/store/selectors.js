@@ -1,6 +1,10 @@
 import {get, reject, groupBy} from 'lodash';
 import {createSelector} from 'reselect';
-import {decorateTrades, decorateOrderBookOrders} from './decorators';
+import {decorateTrades, 
+    decorateOrderBookOrders, 
+    decorateMyFilledOrders,
+    decorateMyOpenOrders
+} from './decorators';
 
 const account = state => get(state, 'web3.account');
 export const accountSelector = createSelector(account, a => a);
@@ -26,8 +30,8 @@ export const ordersLoadedSelector = createSelector(ordersLoaded, ol => ol);
 const orders = state => get(state, 'exchange.orders.data', []);
 export const ordersSelector = createSelector(orders, o => o);
 
-const tradesLoaded = state => get(state, 'exchange.orders.loaded', false);
-export const tradesLoadedSelector = createSelector(tradesLoaded, ol => ol);
+const filledOrdersLoaded = state => get(state, 'exchange.orders.loaded', false);
+export const filledOrdersLoadedSelector = createSelector(filledOrdersLoaded, ol => ol);
 
 export const contractsLoadedSelector = createSelector(
     tokenLoaded, 
@@ -35,9 +39,9 @@ export const contractsLoadedSelector = createSelector(
     (tl, el) => (tl && el)
 );
 
-const trades = state => get(state, 'exchange.trades.data', []);    
-export const tradesSelector = createSelector(
-    trades, 
+const filledOrders = state => get(state, 'exchange.trades.data', []);    
+export const filledOrdersSelector = createSelector(
+    filledOrders, 
     (orders) => {
         //sort ascending for price comparison
         orders = orders.sort((a,b) => a._timestamp - b._timestamp);
@@ -54,7 +58,7 @@ export const tradesSelector = createSelector(
 const openOrders = state => {
     const all = orders(state);
     const cancelled = cancelledOrders(state);
-    const filled = trades(state);
+    const filled = filledOrders(state);
 
     //reject the orders if they appear in filled or cancelled
     const openOrders = reject(all, (order) => {
@@ -64,10 +68,8 @@ const openOrders = state => {
     });
     return openOrders;
 }
-
-const orderBookLoaded = state => cancelledOrdersLoaded(state) && ordersLoaded(state) && tradesLoaded(state);
+const orderBookLoaded = state => cancelledOrdersLoaded(state) && filledOrdersLoaded(state) && ordersLoaded(state)
 export const orderBookLoadedSelector = createSelector(orderBookLoaded, obl => obl);
-
 export const orderBookSelector = createSelector(
     openOrders,
     (orders) => {
@@ -83,5 +85,37 @@ export const orderBookSelector = createSelector(
             sellOrders: sellOrders.sort((a, b) => b.tokenPrice - a.tokenPrice)
         }
         return orders;
+    }
+)
+
+//If all trades loaded, the my trades are definitely loaded
+export const myFilledOrdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
+export const myFilledOrdersSelector = createSelector(
+    account,
+    filledOrders,
+    (account, orders) => {
+        // Find our orders
+        orders = orders.filter((o) => o._user === account || o._userFill === account)
+        // Sort by date ascending
+        orders = orders.sort((a,b) => a._timestamp - b._timestamp)
+        // Decorate orders - add display attributes
+        orders = decorateMyFilledOrders(orders, account)
+        return orders
+    }
+)
+
+//If the order book is loaded, my open orders are definitely loaded
+export const myOpenOrdersLoadedSelector = createSelector(orderBookLoaded, loaded => loaded)
+export const myOpenOrdersSelector = createSelector(
+    account,
+    openOrders,
+    (account, orders) => {
+        // Filter orders created by current account
+        orders = orders.filter((o) => o._user === account)
+        // Decorate orders - add display attributes
+        orders = decorateMyOpenOrders(orders)
+        // Sort orders by date descending
+        orders = orders.sort((a,b) => b._timestamp - a._timestamp)
+        return orders
     }
 )
