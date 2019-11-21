@@ -3,7 +3,8 @@ import {createSelector} from 'reselect';
 import {decorateTrades, 
     decorateOrderBookOrders, 
     decorateMyFilledOrders,
-    decorateMyOpenOrders
+    decorateMyOpenOrders,
+    buildGraphData
 } from './decorators';
 
 const account = state => get(state, 'web3.account');
@@ -68,7 +69,7 @@ const openOrders = state => {
     });
     return openOrders;
 }
-const orderBookLoaded = state => cancelledOrdersLoaded(state) && filledOrdersLoaded(state) && ordersLoaded(state)
+const orderBookLoaded = state => cancelledOrdersLoaded(state) && filledOrdersLoaded(state) && ordersLoaded(state);
 export const orderBookLoadedSelector = createSelector(orderBookLoaded, obl => obl);
 export const orderBookSelector = createSelector(
     openOrders,
@@ -89,33 +90,56 @@ export const orderBookSelector = createSelector(
 )
 
 //If all trades loaded, the my trades are definitely loaded
-export const myFilledOrdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded)
+export const myFilledOrdersLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded);
 export const myFilledOrdersSelector = createSelector(
     account,
     filledOrders,
     (account, orders) => {
         // Find our orders
-        orders = orders.filter((o) => o._user === account || o._userFill === account)
+        orders = orders.filter((o) => o._user === account || o._userFill === account);
         // Sort by date ascending
-        orders = orders.sort((a,b) => a._timestamp - b._timestamp)
+        orders = orders.sort((a,b) => a._timestamp - b._timestamp);
         // Decorate orders - add display attributes
-        orders = decorateMyFilledOrders(orders, account)
-        return orders
+        orders = decorateMyFilledOrders(orders, account);
+        return orders;
     }
 )
 
 //If the order book is loaded, my open orders are definitely loaded
-export const myOpenOrdersLoadedSelector = createSelector(orderBookLoaded, loaded => loaded)
+export const myOpenOrdersLoadedSelector = createSelector(orderBookLoaded, loaded => loaded);
 export const myOpenOrdersSelector = createSelector(
     account,
     openOrders,
     (account, orders) => {
         // Filter orders created by current account
-        orders = orders.filter((o) => o._user === account)
+        orders = orders.filter((o) => o._user === account);
         // Decorate orders - add display attributes
-        orders = decorateMyOpenOrders(orders)
+        orders = decorateMyOpenOrders(orders);
         // Sort orders by date descending
-        orders = orders.sort((a,b) => b._timestamp - a._timestamp)
-        return orders
+        orders = orders.sort((a,b) => b._timestamp - a._timestamp);
+        return orders;
+    }
+)
+
+export const priceChartLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded);
+export const priceChartSelector = createSelector(
+    filledOrders,
+    (orders) => {
+        //ascending date, earliest to latest
+        orders = orders.sort((a,b) => a._timestamp - b._timestamp);
+        //decorate
+        orders = decorateTrades(orders);
+        let lastOrder = orders[orders.length-1];
+        let secondLastOrder = orders[orders.length-2];
+        let lastPrice = get(lastOrder, 'tokenPrice', 0);
+        let secondLastPrice = get(secondLastOrder, 'tokenPrice', 0);
+
+        return ({
+            lastPrice,
+            lastPriceChange: (lastPrice >= secondLastPrice) ? '+' : '-',
+            series: [{
+                data: buildGraphData(orders)
+            }]
+        });
     }
 )
