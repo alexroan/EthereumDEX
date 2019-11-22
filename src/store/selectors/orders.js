@@ -101,3 +101,6 @@ export const myOpenOrdersSelector = createSelector(
         return orders;
     }
 )
+
+const orderCancelling = state => get(state, 'exchange.orderCancelling', false);
+export const orderCancellingSelector = createSelector(orderCancelling, oc => oc);

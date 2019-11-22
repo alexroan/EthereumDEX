@@ -5,8 +5,12 @@ import {Tabs, Tab} from 'react-bootstrap';
 import {myFilledOrdersSelector,
     myFilledOrdersLoadedSelector,
     myOpenOrdersLoadedSelector,
-    myOpenOrdersSelector
+    myOpenOrdersSelector,
+    orderCancellingSelector
 } from '../store/selectors/orders';
+import {exchangeSelector} from '../store/selectors/contracts';
+import {accountSelector} from '../store/selectors/web3';
+import {cancelOrder} from '../store/interactions';
 
 const showMyFilledOrders = (myFilledOrders) => {
     return (
@@ -24,7 +28,8 @@ const showMyFilledOrders = (myFilledOrders) => {
     );
 }
 
-const showMyOpenOrders = (myOpenOrders) => {
+const showMyOpenOrders = (props) => {
+    const {myOpenOrders, dispatch, exchange, account} = props
     return (
         <tbody>
             {myOpenOrders.map((order) => {
@@ -35,7 +40,8 @@ const showMyOpenOrders = (myOpenOrders) => {
                         <td 
                             className="text-muted cancel-order"
                             onClick={(e) => {
-                                console.log("cancelling");
+                                console.log("cancelling", dispatch, exchange, order, account);
+                                cancelOrder(dispatch, exchange, order, account);
                             }}
                         >x</td>
                     </tr>
@@ -75,7 +81,7 @@ class MyTransactions extends Component {
                                         <th>Cancel</th>
                                     </tr>
                                 </thead>
-                                {this.props.showMyOpenOrders ? showMyOpenOrders(this.props.myOpenOrders) : <Spinner type="table" />}
+                                {this.props.showMyOpenOrders ? showMyOpenOrders(this.props) : <Spinner type="table" />}
                             </table>
                         </Tab>
                     </Tabs>
@@ -86,11 +92,16 @@ class MyTransactions extends Component {
 }
 
 function mapStateToProps(state) {
+    const openOrdersLoaded = myOpenOrdersLoadedSelector(state);
+    const orderCancelling = orderCancellingSelector(state);
+
     return {
         myFilledOrders: myFilledOrdersSelector(state),
         showMyFilledOrders: myFilledOrdersLoadedSelector(state),
         myOpenOrders: myOpenOrdersSelector(state),
-        showMyOpenOrders: myOpenOrdersLoadedSelector(state)
+        showMyOpenOrders: openOrdersLoaded && !orderCancelling,
+        exchange: exchangeSelector(state),
+        account: accountSelector(state)
     };
 }
 

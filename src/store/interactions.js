@@ -5,7 +5,9 @@ import {
     exchangeLoaded,
     cancelledOrdersLoaded,
     ordersLoaded,
-    tradesLoaded
+    tradesLoaded,
+    orderCancelling,
+    orderCancelled
 } from "./actions";
 import Web3 from 'web3';
 import Token from '../abis/Token.json';
@@ -48,7 +50,7 @@ export const loadExchange = async (web3, networkId, dispatch) => {
     return null;
 }
 
-export const loadAllOrders = async (exchange, dispatch) => {
+export const loadAllOrders = async (dispatch, exchange) => {
     try{
         // Cancelled
         const cancelStream = await exchange.getPastEvents("Cancel", {fromBlock: 0, toBlock: 'latest'});
@@ -67,4 +69,23 @@ export const loadAllOrders = async (exchange, dispatch) => {
     catch(err){
         console.log(err);
     }
+}
+
+export const cancelOrder = (dispatch, exchange, order, account) => {
+    exchange.methods.cancelOrder(order._id).send({from: account})
+        //only dispatch the redux action once the hash has come back from the blockchain
+        .on('transactionHash', (hash) => {
+            dispatch(orderCancelling());
+        })
+        .on('error', (error) => {
+            console.log(error);
+            window.alert("There was an error");
+        })
+}
+
+//Subscriptions
+export const subscribeToEvents = async (dispatch, exchange) => {
+    exchange.events.Cancel({}, (error, event) => {
+        dispatch(orderCancelled(event.returnValues))
+    });
 }

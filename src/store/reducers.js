@@ -25,11 +25,25 @@ function exchange(state = {}, action) {
         case 'EXCHANGE_LOADED':
             return { ...state, loaded: true, contract: action.exchange};
         case 'CANCELLED_ORDERS_LOADED':
-                return { ...state, cancelledOrders: {loaded: true, data: action.cancelledOrders }};  
+            return { ...state, cancelledOrders: {loaded: true, data: action.cancelledOrders }};  
         case 'ORDERS_LOADED':
-                return { ...state, orders: {loaded: true, data: action.orders }};      
+            return { ...state, orders: {loaded: true, data: action.orders }};      
         case 'TRADES_LOADED':
-                return { ...state, trades: {loaded: true, data: action.trades }};      
+            return { ...state, trades: {loaded: true, data: action.trades }};
+        case 'ORDER_CANCELLING':
+            return { ...state, orderCancelling: true };
+        case 'ORDER_CANCELLED':
+            return { 
+                ...state, 
+                orderCancelling: false,
+                cancelledOrders: {
+                    ...state.cancelledOrders,
+                    data: [
+                        ...state.cancelledOrders.data,
+                        action.order
+                    ]
+                }
+            };
         default:
             return state;
     }
