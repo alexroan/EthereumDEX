@@ -33,7 +33,7 @@ const showMyOpenOrders = (myOpenOrders) => {
                         <td className={`text-${order.orderTypeClass}`}>{order.tokenAmount}</td>
                         <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
                         <td 
-                            className="text-muted"
+                            className="text-muted cancel-order"
                             onClick={(e) => {
                                 console.log("cancelling");
                             }}
