@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import { exchangeSelector } from '../store/selectors/contracts';
-import { loadAllOrders, subscribeToEvents } from '../store/interactions';
+import { subscribeToEvents } from '../store/interactions/subscriptions';
+import { loadAllOrders } from '../store/interactions/orders';
 import Trades from './Trades';
 import OrderBook from './OrderBook';
 import MyTransactions from './MyTransactions';

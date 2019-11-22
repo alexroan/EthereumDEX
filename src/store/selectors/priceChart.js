@@ -1,7 +1,7 @@
 import {get} from 'lodash';
 import {createSelector} from 'reselect';
-import {decorateFilledOrders} from '../decorators/orders';
-import {buildGraphData} from '../decorators/priceChart';
+import {decorateFilledOrders} from './decorators/orders';
+import {buildGraphData} from './decorators/priceChart';
 import {filledOrdersLoaded, filledOrders} from './orders';
 
 export const priceChartLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded);

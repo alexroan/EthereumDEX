@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import './App.css';
-import { loadWeb3, loadAccount, loadToken, loadExchange} from '../store/interactions';
+import {loadWeb3, loadAccount} from '../store/interactions/web3';
+import {loadToken, loadExchange} from '../store/interactions/contracts';
 import Navbar from './Navbar';
 import Content from './Content';
 import { contractsLoadedSelector } from '../store/selectors/contracts';

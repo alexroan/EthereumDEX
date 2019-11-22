@@ -152,3 +152,5 @@ td.cancel-order {
 tr.order-book-order {
   cursor: pointer;
 }
+
+.tooltip { pointer-events: none; }

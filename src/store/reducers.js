@@ -44,6 +44,23 @@ function exchange(state = {}, action) {
                     ]
                 }
             };
+        case 'ORDER_FILLING':
+            return { ...state, orderFilling: true };
+        case 'ORDER_FILLED':
+            let index = state.trades.data.findIndex(order => order._id === action.order._id);
+            let data = state.trades.data;
+            if (index === -1){
+                data = [...state.trades.data, action.order];
+            }
+            
+            return {
+                ...state,
+                orderFilling:false,
+                trades: {
+                    ...state.trades,
+                    data
+                }
+            }
         default:
             return state;
     }

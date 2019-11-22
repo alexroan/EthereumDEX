@@ -5,7 +5,7 @@ import {decorateFilledOrders,
     decorateOrderBookOrders, 
     decorateMyFilledOrders,
     decorateMyOpenOrders
-} from '../decorators/orders';
+} from './decorators/orders';
 
 export const cancelledOrdersLoaded = state => get(state, 'exchange.cancelledOrders.loaded', false);
 export const cancelledOrdersLoadedSelector = createSelector(cancelledOrdersLoaded, col => col);
@@ -78,8 +78,8 @@ export const myFilledOrdersSelector = createSelector(
     (account, orders) => {
         // Find our orders
         orders = orders.filter((o) => o._user === account || o._userFill === account);
-        // Sort by date ascending
-        orders = orders.sort((a,b) => a._timestamp - b._timestamp);
+        // Sort by date descending
+        orders = orders.sort((a,b) => b._timestamp - a._timestamp);
         // Decorate orders - add display attributes
         orders = decorateMyFilledOrders(orders, account);
         return orders;
@@ -104,3 +104,6 @@ export const myOpenOrdersSelector = createSelector(
 
 const orderCancelling = state => get(state, 'exchange.orderCancelling', false);
 export const orderCancellingSelector = createSelector(orderCancelling, oc => oc);
+
+const orderFilling = state => get(state, 'exchange.orderFilling', false);
+export const orderFillingSelector = createSelector(orderFilling, of => of);

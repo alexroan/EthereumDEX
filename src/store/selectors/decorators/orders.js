@@ -1,4 +1,4 @@
-import {ether, tokens, GREEN, RED, ETHER_ADDRESS} from '../../helpers';
+import {ether, tokens, GREEN, RED, ETHER_ADDRESS} from '../../../helpers';
 import moment from 'moment';
 
 //My Transactions
@@ -64,7 +64,7 @@ const decorateOrderBookOrder = (order) => {
         ...order,
         orderType,
         orderTypeClass: (orderType === 'buy') ? GREEN : RED,
-        orderFillClass: (orderType === 'buy') ? 'sell' : 'buy'
+        orderFillAction: (orderType === 'buy') ? 'sell' : 'buy'
     })
 }
 

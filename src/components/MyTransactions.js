@@ -10,14 +10,14 @@ import {myFilledOrdersSelector,
 } from '../store/selectors/orders';
 import {exchangeSelector} from '../store/selectors/contracts';
 import {accountSelector} from '../store/selectors/web3';
-import {cancelOrder} from '../store/interactions';
+import {cancelOrder} from '../store/interactions/orders';
 
 const showMyFilledOrders = (myFilledOrders) => {
     return (
         <tbody>
             {myFilledOrders.map((order) => {
                 return (
-                    <tr key={order._id}>
+                    <tr key={`filled-${order._id}`}>
                         <td className="text-muted">{order.formattedTimestamp}</td>
                         <td className={`text-${order.orderTypeClass}`}>{order.orderSign}{order.tokenAmount}</td>
                         <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
@@ -34,13 +34,12 @@ const showMyOpenOrders = (props) => {
         <tbody>
             {myOpenOrders.map((order) => {
                 return (
-                    <tr key={order._id}>
+                    <tr key={`open-${order._id}`}>
                         <td className={`text-${order.orderTypeClass}`}>{order.tokenAmount}</td>
                         <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
                         <td 
                             className="text-muted cancel-order"
                             onClick={(e) => {
-                                console.log("cancelling", dispatch, exchange, order, account);
                                 cancelOrder(dispatch, exchange, order, account);
                             }}
                         >x</td>
