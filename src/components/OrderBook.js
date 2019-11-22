@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { orderBookLoadedSelector, orderBookSelector } from '../store/selectors';
+import { orderBookLoadedSelector, orderBookSelector } from '../store/selectors/orders';
 import Spinner from './Spinner';
 
 const renderOrder = (order) => {

@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import Spinner from './Spinner';
 import Chart from 'react-apexcharts';
 import {chartOptions} from './PriceChart.config';
-import {priceChartLoadedSelector, priceChartSelector} from '../store/selectors';
+import {priceChartLoadedSelector, priceChartSelector} from '../store/selectors/priceChart';
 
 const priceSymbol = (lastPriceChange) => {
     let output;

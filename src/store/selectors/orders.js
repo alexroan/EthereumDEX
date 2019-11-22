@@ -1,56 +1,37 @@
 import {get, reject, groupBy} from 'lodash';
 import {createSelector} from 'reselect';
-import {decorateTrades, 
+import {account} from './web3';
+import {decorateFilledOrders, 
     decorateOrderBookOrders, 
     decorateMyFilledOrders,
-    decorateMyOpenOrders,
-    buildGraphData
-} from './decorators';
+    decorateMyOpenOrders
+} from '../decorators/orders';
 
-const account = state => get(state, 'web3.account');
-export const accountSelector = createSelector(account, a => a);
-
-const tokenLoaded = state => get(state, 'token.loaded', false);
-export const tokenLoadedSelector = createSelector(tokenLoaded, tl => tl);
-
-const exchangeLoaded = state => get(state, 'exchange.loaded', false);
-export const exchangeLoadedSelector = createSelector(exchangeLoaded, el => el);
-
-const exchange = state => get(state, 'exchange.contract', false);
-export const exchangeSelector = createSelector(exchange, e => e);
-
-const cancelledOrdersLoaded = state => get(state, 'exchange.cancelledOrders.loaded', false);
+export const cancelledOrdersLoaded = state => get(state, 'exchange.cancelledOrders.loaded', false);
 export const cancelledOrdersLoadedSelector = createSelector(cancelledOrdersLoaded, col => col);
 
-const cancelledOrders = state => get(state, 'exchange.cancelledOrders.data', []);
+export const cancelledOrders = state => get(state, 'exchange.cancelledOrders.data', []);
 export const cancelledOrdersSelector = createSelector(cancelledOrders, co => co);
 
-const ordersLoaded = state => get(state, 'exchange.orders.loaded', false);
+export const ordersLoaded = state => get(state, 'exchange.orders.loaded', false);
 export const ordersLoadedSelector = createSelector(ordersLoaded, ol => ol);
 
-const orders = state => get(state, 'exchange.orders.data', []);
+export const orders = state => get(state, 'exchange.orders.data', []);
 export const ordersSelector = createSelector(orders, o => o);
 
-const filledOrdersLoaded = state => get(state, 'exchange.orders.loaded', false);
+export const filledOrdersLoaded = state => get(state, 'exchange.orders.loaded', false);
 export const filledOrdersLoadedSelector = createSelector(filledOrdersLoaded, ol => ol);
 
-export const contractsLoadedSelector = createSelector(
-    tokenLoaded, 
-    exchangeLoaded, 
-    (tl, el) => (tl && el)
-);
-
-const filledOrders = state => get(state, 'exchange.trades.data', []);    
+export const filledOrders = state => get(state, 'exchange.trades.data', []);    
 export const filledOrdersSelector = createSelector(
     filledOrders, 
     (orders) => {
         //sort ascending for price comparison
         orders = orders.sort((a,b) => a._timestamp - b._timestamp);
         //decorate
-        orders = decorateTrades(orders);
+        orders = decorateFilledOrders(orders);
         //sort descending for display
         orders = orders.sort((a,b) => b._timestamp - a._timestamp);
-        console.log(orders);
         return orders;
     } 
 );
@@ -118,28 +99,5 @@ export const myOpenOrdersSelector = createSelector(
         // Sort orders by date descending
         orders = orders.sort((a,b) => b._timestamp - a._timestamp);
         return orders;
-    }
-)
-
-export const priceChartLoadedSelector = createSelector(filledOrdersLoaded, loaded => loaded);
-export const priceChartSelector = createSelector(
-    filledOrders,
-    (orders) => {
-        //ascending date, earliest to latest
-        orders = orders.sort((a,b) => a._timestamp - b._timestamp);
-        //decorate
-        orders = decorateTrades(orders);
-        let lastOrder = orders[orders.length-1];
-        let secondLastOrder = orders[orders.length-2];
-        let lastPrice = get(lastOrder, 'tokenPrice', 0);
-        let secondLastPrice = get(secondLastOrder, 'tokenPrice', 0);
-
-        return ({
-            lastPrice,
-            lastPriceChange: (lastPrice >= secondLastPrice) ? '+' : '-',
-            series: [{
-                data: buildGraphData(orders)
-            }]
-        });
     }
 )

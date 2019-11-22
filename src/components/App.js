@@ -4,7 +4,7 @@ import './App.css';
 import { loadWeb3, loadAccount, loadToken, loadExchange} from '../store/intractions';
 import Navbar from './Navbar';
 import Content from './Content';
-import { contractsLoadedSelector } from '../store/selectors';
+import { contractsLoadedSelector } from '../store/selectors/contracts';
 
 
 class App extends Component {

@@ -6,7 +6,7 @@ import {myFilledOrdersSelector,
     myFilledOrdersLoadedSelector,
     myOpenOrdersLoadedSelector,
     myOpenOrdersSelector
-} from '../store/selectors';
+} from '../store/selectors/orders';
 
 const showMyFilledOrders = (myFilledOrders) => {
     return (
@@ -32,7 +32,12 @@ const showMyOpenOrders = (myOpenOrders) => {
                     <tr key={order._id}>
                         <td className={`text-${order.orderTypeClass}`}>{order.tokenAmount}</td>
                         <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
-                        <td className="text-muted">x</td>
+                        <td 
+                            className="text-muted"
+                            onClick={(e) => {
+                                console.log("cancelling");
+                            }}
+                        >x</td>
                     </tr>
                 )
             })}
