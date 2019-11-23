@@ -5,6 +5,7 @@ import {
     orderCancelling,
     orderFilling
 } from "../actions";
+import {ETHER_ADDRESS} from '../../helpers';
 
 export const loadAllOrders = async (dispatch, exchange) => {
     try{

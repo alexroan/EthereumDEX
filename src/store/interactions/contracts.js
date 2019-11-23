@@ -1,6 +1,8 @@
-import {tokenLoaded, exchangeLoaded} from '../actions';
+import {tokenLoaded, exchangeLoaded, tokenBalanceLoaded, exchangeEtherBalanceLoaded, exchangeTokenBalanceLoaded, balancesLoaded} from '../actions';
 import Token from '../../abis/Token.json';
 import Exchange from '../../abis/Exchange.json';
+import {ETHER_ADDRESS} from '../../helpers.js';
+import {etherBalanceLoaded} from '../actions';
 
 export const loadToken = async (web3, networkId, dispatch) => {
     try{
@@ -24,4 +26,24 @@ export const loadExchange = async (web3, networkId, dispatch) => {
         window.alert("Contract not deployed to current network");
     }
     return null;
+}
+
+export const loadBalances = async (web3, exchange, token, account, dispatch) => {
+    //ether balance
+    const etherBalance = await web3.eth.getBalance(account);
+    dispatch(etherBalanceLoaded(etherBalance));
+
+    //token balance
+    const tokenBalance = await token.methods.balanceOf(account).call();
+    dispatch(tokenBalanceLoaded(tokenBalance));
+    
+    //balance of account on the smart contract
+    const exchangeEtherBalance = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call();
+    dispatch(exchangeEtherBalanceLoaded(exchangeEtherBalance));
+
+    //token balance of account on the smart contract
+    const exchangeTokenBalance = await exchange.methods.balanceOf(token.options.address, account).call();
+    dispatch(exchangeTokenBalanceLoaded(exchangeTokenBalance));
+
+    dispatch(balancesLoaded());
 }
