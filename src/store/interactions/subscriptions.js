@@ -1,4 +1,4 @@
-import {orderCancelled, orderFilled} from "../actions";
+import {orderCancelled, orderFilled, balancesLoaded} from "../actions";
 
 //Subscriptions
 export const subscribeToEvents = async (dispatch, exchange) => {
@@ -8,5 +8,13 @@ export const subscribeToEvents = async (dispatch, exchange) => {
 
     exchange.events.Trade({}, (error, event) => {
         dispatch(orderFilled(event.returnValues));
+    });
+
+    exchange.events.Deposit({}, (error, event) => {
+        dispatch(balancesLoaded());
+    });
+
+    exchange.events.Withdraw({}, (error, event) => {
+        dispatch(balancesLoaded());
     })
 }

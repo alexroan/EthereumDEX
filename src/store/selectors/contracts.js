@@ -38,3 +38,16 @@ const exchangeTokenBalance = state => get(state, 'exchange.tokenBalance');
 export const exchangeTokenBalanceSelector = createSelector(exchangeTokenBalance, (balance) => {
     return formatBalance(balance);
 });
+
+const etherDepositAmount = state => get(state, 'exchange.etherDepositAmount', 0);
+export const etherDepositAmountSelector = createSelector(etherDepositAmount, eda => eda);
+
+const etherWithdrawAmount = state => get(state, 'exchange.etherWithdrawAmount', 0);
+export const etherWithdrawAmountSelector = createSelector(etherWithdrawAmount, ewa => ewa);
+
+
+const tokenDepositAmount = state => get(state, 'exchange.tokenDepositAmount', 0);
+export const tokenDepositAmountSelector = createSelector(tokenDepositAmount, tda => tda);
+
+const tokenWithdrawAmount = state => get(state, 'exchange.tokenWithdrawAmount', 0);
+export const tokenWithdrawAmountSelector = createSelector(tokenWithdrawAmount, twa => twa);
