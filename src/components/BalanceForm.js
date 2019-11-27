@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 
-class ExchangeForm extends Component {
+class BalanceForm extends Component {
     render(){
         const {onSubmit, placeHolder, onChange, buttonText} = this.props;
         return (
@@ -25,4 +25,4 @@ function mapStateToProps(state) {
     return {}
 }
 
-export default connect(mapStateToProps)(ExchangeForm);
+export default connect(mapStateToProps)(BalanceForm);

@@ -16,8 +16,8 @@ import { exchangeSelector,
 import { web3Selector, accountSelector, etherBalanceSelector } from '../store/selectors/web3';
 import { loadBalances, depositEther, withdrawEther, depositToken, withdrawToken} from '../store/interactions/contracts';
 import { etherDepositAmountChanged, etherWithdrawAmountChanged, tokenDepositAmountChanged, tokenWithdrawAmountChanged } from '../store/actions';
-import ExchangeForm from './ExchangeForm';
-import ExchangeTable from './ExchangeTable';
+import BalanceForm from './BalanceForm';
+import BalanceTable from './BalanceTable';
 
 
 const showForm = (props) => {
@@ -53,15 +53,15 @@ const showForm = (props) => {
     return (
         <Tabs defaultActiveKey={"deposit"} className={"bg-dark text-white"}>
             <Tab eventKey={"deposit"} title={"Deposit"} className={"bg-dark"}>
-                <ExchangeTable hasHead={true} tokenName={"ETH"} walletAmount={etherBalance} exchangeAmount={exchangeEtherBalance} />
-                <ExchangeForm 
+                <BalanceTable hasHead={true} tokenName={"ETH"} walletAmount={etherBalance} exchangeAmount={exchangeEtherBalance} />
+                <BalanceForm 
                     onSubmit={depositEtherSubmit} 
                     placeHolder={"ETH Amount"}
                     onChange={depositEtherChange}
                     buttonText={"Deposit"}
                 />
-                <ExchangeTable hasHead={false} tokenName={"DAPP"} walletAmount={tokenBalance} exchangeAmount={exchangeTokenBalance} />
-                <ExchangeForm 
+                <BalanceTable hasHead={false} tokenName={"DAPP"} walletAmount={tokenBalance} exchangeAmount={exchangeTokenBalance} />
+                <BalanceForm 
                     onSubmit={depositTokenSubmit} 
                     placeHolder={"Token Amount"} 
                     onChange={depositTokenChange}
@@ -69,15 +69,15 @@ const showForm = (props) => {
                 />
             </Tab>
             <Tab eventKey={"withdraw"} title={"Withdraw"} className={"bg-dark"}>
-                <ExchangeTable hasHead={true} tokenName={"ETH"} walletAmount={etherBalance} exchangeAmount={exchangeEtherBalance} />
-                <ExchangeForm 
+                <BalanceTable hasHead={true} tokenName={"ETH"} walletAmount={etherBalance} exchangeAmount={exchangeEtherBalance} />
+                <BalanceForm 
                     onSubmit={withdrawEtherSubmit} 
                     placeHolder={"ETH Amount"} 
                     onChange={withdrawEtherChange}
                     buttonText={"Withdraw"}    
                 />
-                <ExchangeTable hasHead={false} tokenName={"DAPP"} walletAmount={tokenBalance} exchangeAmount={exchangeTokenBalance} />
-                <ExchangeForm 
+                <BalanceTable hasHead={false} tokenName={"DAPP"} walletAmount={tokenBalance} exchangeAmount={exchangeTokenBalance} />
+                <BalanceForm 
                     onSubmit={withdrawTokenSubmit} 
                     placeHolder={"Token Amount"} 
                     onChange={withdrawTokenChange}

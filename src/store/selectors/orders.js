@@ -107,3 +107,9 @@ export const orderCancellingSelector = createSelector(orderCancelling, oc => oc)
 
 const orderFilling = state => get(state, 'exchange.orderFilling', false);
 export const orderFillingSelector = createSelector(orderFilling, of => of);
+
+const buyOrder = state => get(state, 'exchange.buyOrder', {});
+export const buyOrderSelector = createSelector(buyOrder, bo => bo);
+
+const sellOrder = state => get(state, 'exchange.sellOrder', {});
+export const sellOrderSelector = createSelector(sellOrder, bo => bo);

@@ -25,6 +25,7 @@ function token(state = {}, action) {
 }
 
 function exchange(state = {}, action) {
+    let index, data;
     switch (action.type) {
         case 'EXCHANGE_LOADED':
             return { ...state, loaded: true, contract: action.exchange};
@@ -51,12 +52,13 @@ function exchange(state = {}, action) {
         case 'ORDER_FILLING':
             return { ...state, orderFilling: true };
         case 'ORDER_FILLED':
-            let index = state.trades.data.findIndex(order => order._id === action.order._id);
-            let data = state.trades.data;
+            //prevent duplicates in the redux store
+            index = state.trades.data.findIndex(order => order._id === action.order._id);
+            data = state.trades.data;
+            //if it doesn't already exist, add to the store
             if (index === -1){
                 data = [...state.trades.data, action.order];
             }
-            
             return {
                 ...state,
                 orderFilling:false,
@@ -81,6 +83,40 @@ function exchange(state = {}, action) {
                 return { ...state, tokenDepositAmount: action.amount}
         case 'TOKEN_WITHDRAW_AMOUNT_CHANGED':
             return { ...state, tokenWithdrawAmount: action.amount}
+        case 'BUY_ORDER_AMOUNT_CHANGED':
+            return { ...state, buyOrder: { ...state.buyOrder, amount: action.amount } }
+        case 'BUY_ORDER_PRICE_CHANGED':
+            return { ...state, buyOrder: { ...state.buyOrder, price: action.price } }
+        case 'BUY_ORDER_MAKING':
+            return { ...state, buyOrder: { ...state.buyOrder, amount: null, price: null, making: true} }
+        case 'SELL_ORDER_AMOUNT_CHANGED':
+            return { ...state, sellOrder: { ...state.sellOrder, amount: action.amount } }
+        case 'SELL_ORDER_PRICE_CHANGED':
+            return { ...state, sellOrder: { ...state.sellOrder, price: action.price } }
+        case 'SELL_ORDER_MAKING':
+            return { ...state, sellOrder: { ...state.sellOrder, amount: null, price: null, making: true} }
+        case 'ORDER_MADE':
+            //prevent duplicates in the redux store
+            index = state.orders.data.findIndex(order => order._id === action.order._id);
+            data = state.orders.data;
+            if (index === -1){
+                data = [...state.orders.data, action.order];
+            }
+            return {
+                ...state,
+                orders: {
+                    ...state.orders,
+                    data
+                },
+                buyOrder: {
+                    ...state.buyOrder,
+                    making:false
+                },
+                sellOrder: {
+                    ...state.sellOrder,
+                    making:false
+                }
+            }
         default:
             return state;
     }

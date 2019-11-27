@@ -23,7 +23,7 @@ const tableHead = () => {
     );
 }
 
-class ExchangeTable extends Component {
+class BalanceTable extends Component {
     render() {
         const {hasHead, tokenName, walletAmount, exchangeAmount} = this.props;
         return (
@@ -41,4 +41,4 @@ function mapStateToProps(state) {
     return {}
 }
 
-export default connect(mapStateToProps)(ExchangeTable);
+export default connect(mapStateToProps)(BalanceTable);
