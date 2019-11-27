@@ -4,23 +4,23 @@ self.__precacheManifest = [
     "url": "/EthereumDEX/static/js/runtime~main.2d476657.js"
   },
   {
-    "revision": "8090d6b9108a4d12ca28",
-    "url": "/EthereumDEX/static/js/main.8090d6b9.chunk.js"
+    "revision": "73af54e9e75d5299cef5",
+    "url": "/EthereumDEX/static/js/main.73af54e9.chunk.js"
   },
   {
     "revision": "4cc5ea94260e50ab69e0",
     "url": "/EthereumDEX/static/js/1.4cc5ea94.chunk.js"
   },
   {
-    "revision": "8090d6b9108a4d12ca28",
-    "url": "/EthereumDEX/static/css/main.5b8d91b6.chunk.css"
+    "revision": "73af54e9e75d5299cef5",
+    "url": "/EthereumDEX/static/css/main.8091082b.chunk.css"
   },
   {
     "revision": "4cc5ea94260e50ab69e0",
     "url": "/EthereumDEX/static/css/1.03d0afb5.chunk.css"
   },
   {
-    "revision": "482583a62af5c716cdb9adab96374d5c",
+    "revision": "f680fcf8122fc2d469ea0603b0cffbad",
     "url": "/EthereumDEX/index.html"
   }
 ];
