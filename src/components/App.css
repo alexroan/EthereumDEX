@@ -10,13 +10,13 @@
   flex-wrap: nowrap;
   align-items: stretch;
   justify-content: space-evenly;
-  padding: 8px;
+  padding: 4px;
   z-index: 1
 }
 
 .content > div {
   width: 20%;
-  padding-right: 8px
+  padding-right: 4px
 }
 
 .content > div:first-child {
@@ -66,7 +66,11 @@
 }
 
 .vertical-split > div:first-child {
-  margin-bottom: 8px
+  border-bottom: 2px solid #1d1d1d;
+}
+
+.vertical-split > div:last-child {
+  border-top: 2px solid #1d1d1d;
 }
 
 .vertical-split:last-child > div:first-child {
