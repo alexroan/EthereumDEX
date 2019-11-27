@@ -1,15 +1,15 @@
 {
   "main.css": "/EthereumDEX/static/css/main.5b8d91b6.chunk.css",
-  "main.js": "/EthereumDEX/static/js/main.a681a2f5.chunk.js",
-  "main.js.map": "/EthereumDEX/static/js/main.a681a2f5.chunk.js.map",
+  "main.js": "/EthereumDEX/static/js/main.8090d6b9.chunk.js",
+  "main.js.map": "/EthereumDEX/static/js/main.8090d6b9.chunk.js.map",
   "static/css/1.03d0afb5.chunk.css": "/EthereumDEX/static/css/1.03d0afb5.chunk.css",
   "static/js/1.4cc5ea94.chunk.js": "/EthereumDEX/static/js/1.4cc5ea94.chunk.js",
   "static/js/1.4cc5ea94.chunk.js.map": "/EthereumDEX/static/js/1.4cc5ea94.chunk.js.map",
   "runtime~main.js": "/EthereumDEX/static/js/runtime~main.2d476657.js",
   "runtime~main.js.map": "/EthereumDEX/static/js/runtime~main.2d476657.js.map",
-  "static/css/main.5b8d91b6.chunk.css.map": "/EthereumDEX/static/css/main.5b8d91b6.chunk.css.map",
   "static/css/1.03d0afb5.chunk.css.map": "/EthereumDEX/static/css/1.03d0afb5.chunk.css.map",
+  "static/css/main.5b8d91b6.chunk.css.map": "/EthereumDEX/static/css/main.5b8d91b6.chunk.css.map",
   "index.html": "/EthereumDEX/index.html",
-  "precache-manifest.8b21c89814ec201922332c13b8fb2076.js": "/EthereumDEX/precache-manifest.8b21c89814ec201922332c13b8fb2076.js",
+  "precache-manifest.8ff94176a4ff42cec14d2138af7c1850.js": "/EthereumDEX/precache-manifest.8ff94176a4ff42cec14d2138af7c1850.js",
   "service-worker.js": "/EthereumDEX/service-worker.js"
 }
