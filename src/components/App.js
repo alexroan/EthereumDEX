@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
 import './App.css';
-import {loadWeb3, loadAccount} from '../store/interactions/web3';
-import {loadToken, loadExchange} from '../store/interactions/contracts';
 import Navbar from './Navbar';
 import Content from './Content';
+import {connect} from 'react-redux';
+import {loadWeb3, loadAccount} from '../store/interactions/web3';
+import {loadToken, loadExchange} from '../store/interactions/contracts';
 import { contractsLoadedSelector } from '../store/selectors/contracts';
 
 
@@ -17,8 +17,12 @@ class App extends Component {
 
 	async loadBlockchainData(dispatch) {
 		const web3 = loadWeb3(dispatch);
+		if (!web3) {
+			alert('Web3 unable to load');
+			return;
+		}
 		const networkId = await web3.eth.net.getId();
-		await loadAccount(web3, dispatch);
+		await loadAccount(dispatch);
 		const token = await loadToken(web3, networkId, dispatch);
 		if (!token) {
 			alert('Token not loaded, please load a network with token');
