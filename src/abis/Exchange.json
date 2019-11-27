@@ -18876,6 +18876,203 @@
     "version": "0.5.8+commit.23d335f2.Emscripten.clang"
   },
   "networks": {
+    "42": {
+      "events": {
+        "0xdcbc1c05240f31ff3ad067ef1ee35ce4997762752e3a095284754544f4c709d7": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "_token",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_balance",
+              "type": "uint256"
+            }
+          ],
+          "name": "Deposit",
+          "type": "event",
+          "signature": "0xdcbc1c05240f31ff3ad067ef1ee35ce4997762752e3a095284754544f4c709d7"
+        },
+        "0xf341246adaac6f497bc2a656f546ab9e182111d630394f0c57c710a59a2cb567": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "_token",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_balance",
+              "type": "uint256"
+            }
+          ],
+          "name": "Withdraw",
+          "type": "event",
+          "signature": "0xf341246adaac6f497bc2a656f546ab9e182111d630394f0c57c710a59a2cb567"
+        },
+        "0x9d33853d43e3607b4cc01fdc78338ff2dca6fef7db9232dae6d3eb55fbc3b109": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "_id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_tokenGet",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_amountGet",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_tokenGive",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_amountGive",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "Order",
+          "type": "event",
+          "signature": "0x9d33853d43e3607b4cc01fdc78338ff2dca6fef7db9232dae6d3eb55fbc3b109"
+        },
+        "0x77de1da0be5f2d3b110d05c6694e5c4ff2d9da7cd23d84353ecf78c7b5acec61": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "_id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_tokenGet",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_amountGet",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_tokenGive",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_amountGive",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "Cancel",
+          "type": "event",
+          "signature": "0x77de1da0be5f2d3b110d05c6694e5c4ff2d9da7cd23d84353ecf78c7b5acec61"
+        },
+        "0x0dddf4182dc0fc1a311cb75f049c97403c6b8a99cf6b2229a36e7c526acb3f81": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "_id",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_user",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_tokenGet",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_amountGet",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_tokenGive",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_amountGive",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "name": "_userFill",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "_timestamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "Trade",
+          "type": "event",
+          "signature": "0x0dddf4182dc0fc1a311cb75f049c97403c6b8a99cf6b2229a36e7c526acb3f81"
+        }
+      },
+      "links": {},
+      "address": "0x691ca22Ea918794DD0f45D5F28E0Cd6Ccd80EcD7",
+      "transactionHash": "0xfe3bd4c2f3dfed56f4a7f21952e1b4fde07774cf1a231a2dbd30897189efdd42"
+    },
     "5777": {
       "events": {
         "0xdcbc1c05240f31ff3ad067ef1ee35ce4997762752e3a095284754544f4c709d7": {
@@ -19075,7 +19272,7 @@
     }
   },
   "schemaVersion": "3.0.16",
-  "updatedAt": "2019-11-27T13:39:43.979Z",
+  "updatedAt": "2019-11-27T16:31:07.300Z",
   "devdoc": {
     "methods": {}
   },
