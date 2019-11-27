@@ -7,6 +7,7 @@ import {tokenSelector, exchangeSelector} from '../store/selectors/contracts';
 import {makeBuyOrder, makeSellOrder} from '../store/interactions/orders';
 import OrderForm from './OrderForm';
 import {buyOrderAmountChanged, buyOrderPriceChanged, sellOrderAmountChanged, sellOrderPriceChanged} from '../store/actions';
+import Spinner from './Spinner';
 
 
 const showForm = (props) => {
@@ -61,7 +62,7 @@ class NewOrder extends Component {
                     New Order
                 </div>
                 <div className="card-body">
-                    {showForm(this.props)}
+                    {showForm? showForm(this.props) : <Spinner type="div" />}
                 </div>
             </div>
         );
