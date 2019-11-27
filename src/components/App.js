@@ -22,7 +22,11 @@ class App extends Component {
 			return;
 		}
 		const networkId = await web3.eth.net.getId();
-		await loadAccount(dispatch);
+		const accountLoaded = await loadAccount(web3, dispatch);
+		if(!accountLoaded) {
+			alert("Could not load account");
+			return;
+		}
 		const token = await loadToken(web3, networkId, dispatch);
 		if (!token) {
 			alert('Token not loaded, please load a network with token');
