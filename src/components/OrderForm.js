@@ -7,9 +7,11 @@ class OrderForm extends Component {
         return (
             <form onSubmit={onSubmit}>
                 <div className="form-group small">
-                    <label>{`${buyOrSell} Amount`}</label>
+                    <label>{`${buyOrSell} Amount (DApp)`}</label>
                     <div className="input-group">
-                        <input type="text" 
+                        <input type="number"
+                            step="any"
+                            min="0"
                             placeholder="amount"
                             onChange={amountOnChange}
                             className="form-control form-control-sm bg-dark text-white"
@@ -20,6 +22,8 @@ class OrderForm extends Component {
                     <label>{`${buyOrSell} Price`}</label>
                     <div className="input-group">
                         <input type="text" 
+                            step="any"
+                            min="0"
                             placeholder="price"
                             onChange={priceOnChange}
                             className="form-control form-control-sm bg-dark text-white"

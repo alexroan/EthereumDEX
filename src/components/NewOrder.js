@@ -8,6 +8,7 @@ import {makeBuyOrder, makeSellOrder} from '../store/interactions/orders';
 import OrderForm from './OrderForm';
 import {buyOrderAmountChanged, buyOrderPriceChanged, sellOrderAmountChanged, sellOrderPriceChanged} from '../store/actions';
 import Spinner from './Spinner';
+import {removeTrailingZeros} from '../helpers';
 
 
 const showForm = (props) => {
@@ -37,7 +38,7 @@ const showForm = (props) => {
                     buttonText={"Create Buy Order"}
                     buyOrSell={"Buy"}
                 />
-                { showBuyTotal ? <small>Total: {buyOrder.amount * buyOrder.price} ETH</small> : null }
+                { showBuyTotal ? <small>Total: {removeTrailingZeros((buyOrder.amount * buyOrder.price).toFixed(18))} ETH</small> : null }
             </Tab>
             <Tab className="bg-dark" title="Sell" eventKey="sell">
                 <OrderForm
@@ -47,7 +48,7 @@ const showForm = (props) => {
                     buttonText={"Create Sell Order"}
                     buyOrSell={"Sell"}
                 />
-                { showSellTotal ? <small>Total: {sellOrder.amount * sellOrder.price} ETH</small> : null }
+                { showSellTotal ? <small>Total: {removeTrailingZeros((sellOrder.amount * sellOrder.price).toFixed(18))} ETH</small> : null }
             </Tab>
         </Tabs>
     )

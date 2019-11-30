@@ -8,6 +8,8 @@ class BalanceForm extends Component {
             <form className="row" onSubmit={onSubmit}>
                 <div className="col-12 col-sm pr-sm-2">
                     <input type="number" 
+                        step="any"
+                        min="0"
                         placeholder={placeHolder} 
                         onChange={onChange}
                         className="form-control form-control-sm bg-dark text-white"

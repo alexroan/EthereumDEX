@@ -18,3 +18,8 @@ export const formatBalance = (balance) => {
     balance = Math.round(balance * precision) / precision;
     return balance;
 }
+
+export const removeTrailingZeros = (number) => {
+    number = number.replace(/([0-9]+(\.[0-9]+[1-9])?)(\.?0+$)/,'$1');
+    return number;
+}
