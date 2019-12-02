@@ -11,7 +11,8 @@ import { exchangeSelector,
     etherDepositAmountSelector,
     etherWithdrawAmountSelector,
     tokenDepositAmountSelector,
-    tokenWithdrawAmountSelector
+    tokenWithdrawAmountSelector,
+    tokenNameSelector
 } from '../store/selectors/contracts';
 import { web3Selector, accountSelector, etherBalanceSelector } from '../store/selectors/web3';
 import { loadBalances, depositEther, withdrawEther, depositToken, withdrawToken} from '../store/interactions/contracts';
@@ -60,7 +61,7 @@ const showForm = (props) => {
                     onChange={depositEtherChange}
                     buttonText={"Deposit"}
                 />
-                <BalanceTable hasHead={false} tokenName={"DAPP"} walletAmount={tokenBalance} exchangeAmount={exchangeTokenBalance} />
+                <BalanceTable hasHead={false} tokenName={props.tokenName} walletAmount={tokenBalance} exchangeAmount={exchangeTokenBalance} />
                 <BalanceForm 
                     onSubmit={depositTokenSubmit} 
                     placeHolder={"Token Amount"} 
@@ -76,7 +77,7 @@ const showForm = (props) => {
                     onChange={withdrawEtherChange}
                     buttonText={"Withdraw"}    
                 />
-                <BalanceTable hasHead={false} tokenName={"DAPP"} walletAmount={tokenBalance} exchangeAmount={exchangeTokenBalance} />
+                <BalanceTable hasHead={false} tokenName={props.tokenName} walletAmount={tokenBalance} exchangeAmount={exchangeTokenBalance} />
                 <BalanceForm 
                     onSubmit={withdrawTokenSubmit} 
                     placeHolder={"Token Amount"} 
@@ -120,6 +121,7 @@ function mapStateToProps(state) {
         exchange: exchangeSelector(state),
         web3: web3Selector(state),
         token: tokenSelector(state),
+        tokenName: tokenNameSelector(state),
         etherBalance: etherBalanceSelector(state),
         tokenBalance: tokenBalanceSelector(state),
         exchangeEtherBalance: exchangeEtherBalanceSelector(state),

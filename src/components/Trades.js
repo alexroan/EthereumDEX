@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {filledOrdersSelector, filledOrdersLoadedSelector} from '../store/selectors/orders';
 import Spinner from './Spinner';
+import { tokenNameSelector } from '../store/selectors/contracts';
 
 const showFilledOrders = (filledOrders) => {
     return (
@@ -20,11 +21,9 @@ const showFilledOrders = (filledOrders) => {
 }
 
 class Trades extends Component {
-    componentWillMount() {
-
-    }
 
     render() {
+        const {tokenName} = this.props;
         return (
             <div className="vertical">
                 <div className="card bg-dark text-white">
@@ -36,8 +35,8 @@ class Trades extends Component {
                             <thead>
                                 <tr>
                                     <th>Time</th>
-                                    <th>DApp</th>
-                                    <th>DApp/Eth</th>
+                                    <th>{tokenName}</th>
+                                    <th>{tokenName}/Eth</th>
                                 </tr>
                             </thead>
                             { this.props.filledOrdersLoaded ? showFilledOrders(this.props.filledOrders) : <Spinner type="table" />}
@@ -52,7 +51,8 @@ class Trades extends Component {
 function mapStateToProps(state) {
     return {
         filledOrdersLoaded: filledOrdersLoadedSelector(state),
-        filledOrders: filledOrdersSelector(state)
+        filledOrders: filledOrdersSelector(state),
+        tokenName: tokenNameSelector(state)
     };
 }
 

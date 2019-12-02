@@ -8,7 +8,7 @@ import {myFilledOrdersSelector,
     myOpenOrdersSelector,
     orderCancellingSelector
 } from '../store/selectors/orders';
-import {exchangeSelector} from '../store/selectors/contracts';
+import {exchangeSelector, tokenNameSelector} from '../store/selectors/contracts';
 import {accountSelector} from '../store/selectors/web3';
 import {cancelOrder} from '../store/interactions/orders';
 
@@ -52,6 +52,7 @@ const showMyOpenOrders = (props) => {
 
 class MyTransactions extends Component {
     render() {
+        const {tokenName} = this.props;
         return (
             <div className="card bg-dark text-white">
                 <div className="card-header">
@@ -64,8 +65,8 @@ class MyTransactions extends Component {
                                 <thead>
                                     <tr>
                                         <th>Time</th>
-                                        <th>DAPP</th>
-                                        <th>DAPP/ETH</th>
+                                        <th>{tokenName}</th>
+                                        <th>{tokenName}/ETH</th>
                                     </tr>
                                 </thead>
                                 {this.props.showMyFilledOrders ? showMyFilledOrders(this.props.myFilledOrders) : <Spinner type="table" />}
@@ -76,7 +77,7 @@ class MyTransactions extends Component {
                                 <thead>
                                     <tr>
                                         <th>Amount</th>
-                                        <th>DAPP/ETH</th>
+                                        <th>{tokenName}/ETH</th>
                                         <th>Cancel</th>
                                     </tr>
                                 </thead>
@@ -100,7 +101,8 @@ function mapStateToProps(state) {
         myOpenOrders: myOpenOrdersSelector(state),
         showMyOpenOrders: openOrdersLoaded && !orderCancelling,
         exchange: exchangeSelector(state),
-        account: accountSelector(state)
+        account: accountSelector(state),
+        tokenName: tokenNameSelector(state)
     };
 }
 

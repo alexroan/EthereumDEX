@@ -1,13 +1,20 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import {tokenNameSelector} from '../store/selectors/contracts';
 
 class OrderForm extends Component {
     render(){
-        const {onSubmit, amountOnChange, priceOnChange, buttonText, buyOrSell} = this.props;
+        const {onSubmit, 
+            amountOnChange, 
+            priceOnChange, 
+            buttonText, 
+            buyOrSell,
+            tokenName
+        } = this.props;
         return (
             <form onSubmit={onSubmit}>
                 <div className="form-group small">
-                    <label>{`${buyOrSell} Amount (DApp)`}</label>
+                    <label>{`${buyOrSell} Amount (${tokenName})`}</label>
                     <div className="input-group">
                         <input type="number"
                             step="any"
@@ -37,7 +44,9 @@ class OrderForm extends Component {
 }
 
 function mapStateToProps(state) {
-    return {};
+    return {
+        tokenName: tokenNameSelector(state)
+    };
 }
 
 export default connect(mapStateToProps)(OrderForm);

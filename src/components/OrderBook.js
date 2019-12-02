@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import {orderBookLoadedSelector, orderBookSelector, orderFillingSelector} from '../store/selectors/orders';
-import {exchangeSelector} from '../store/selectors/contracts';
+import {exchangeSelector, tokenNameSelector} from '../store/selectors/contracts';
 import {accountSelector} from '../store/selectors/web3';
 
 import Spinner from './Spinner';
@@ -29,13 +29,13 @@ const renderOrder = (order, props) => {
 
 const showOrderBook = (props) => {
     //fetch key from props using ES6
-    const {orderBook} = props;
+    const {orderBook, tokenName} = props;
     return (
         <tbody>
             {orderBook.sellOrders.map((order) => renderOrder(order, props))}
             <tr>
-                <th>DAPP</th>
-                <th>DAPP/ETH</th>
+                <th>{tokenName}</th>
+                <th>{tokenName}/ETH</th>
                 <th>ETH</th>
             </tr>
             {orderBook.buyOrders.map((order) => renderOrder(order, props))}
@@ -69,7 +69,8 @@ function mapStateToProps(state){
         orderBook: orderBookSelector(state),
         showOrderBook: orderBookLoaded && !orderFilling,
         exchange: exchangeSelector(state),
-        account: accountSelector(state)
+        account: accountSelector(state),
+        tokenName: tokenNameSelector(state)
     }
 }
 

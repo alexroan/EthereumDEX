@@ -4,6 +4,7 @@ import Spinner from './Spinner';
 import Chart from 'react-apexcharts';
 import {chartOptions} from './PriceChart.config';
 import {priceChartLoadedSelector, priceChartSelector} from '../store/selectors/priceChart';
+import { tokenNameSelector } from '../store/selectors/contracts';
 
 const priceSymbol = (lastPriceChange) => {
     let output;
@@ -15,11 +16,12 @@ const priceSymbol = (lastPriceChange) => {
     return(output);
 }
 
-const showPriceChart = (priceChart) => {
+const showPriceChart = (props) => {
+    const {chartData, tokenName} = props;
     return (
         <div className="price-chart">
-            <h4>DAPP/ETH &nbsp; {priceSymbol(priceChart.lastPriceChange)} &nbsp; {priceChart.lastPrice}</h4>
-            <Chart options={chartOptions} series={priceChart.series} type="candlestick" width="100%" height="100%" />
+            <h4>{tokenName}/ETH &nbsp; {priceSymbol(chartData.lastPriceChange)} &nbsp; {chartData.lastPrice}</h4>
+            <Chart options={chartOptions} series={chartData.series} type="candlestick" width="100%" height="100%" />
         </div>
     );
 }
@@ -32,7 +34,7 @@ class PriceChart extends Component {
                     Graph
                 </div>
                 <div className="card-body">
-                    {(this.props.showChart) ? showPriceChart(this.props.chartData) : <Spinner type="div" />}
+                    {(this.props.showChart) ? showPriceChart(this.props) : <Spinner type="div" />}
                 </div>
             </div>
         );
@@ -42,7 +44,8 @@ class PriceChart extends Component {
 function mapStateToProps(state) {
     return {
         showChart: priceChartLoadedSelector(state),
-        chartData: priceChartSelector(state)
+        chartData: priceChartSelector(state),
+        tokenName: tokenNameSelector(state)
     }
 }
 
