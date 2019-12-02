@@ -7,7 +7,8 @@ import {etherBalanceLoaded} from '../actions';
 export const loadToken = async (web3, networkId, dispatch) => {
     try{
         const token = web3.eth.Contract(Token.abi, Token.networks[networkId].address);
-        dispatch(tokenLoaded(token));
+        const name = await token.methods.symbol().call();
+        dispatch(tokenLoaded(token, name));
         return token;
     }
     catch (err){

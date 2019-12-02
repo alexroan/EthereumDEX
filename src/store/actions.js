@@ -12,10 +12,11 @@ export function web3AccountLoaded(account){
     }
 }
 
-export function tokenLoaded(token){
+export function tokenLoaded(token, name){
     return {
         type: 'TOKEN_LOADED',
-        token
+        token,
+        name
     }
 }
 

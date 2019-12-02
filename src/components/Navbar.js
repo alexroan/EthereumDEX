@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
+import {Dropdown} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import {accountSelector} from '../store/selectors/web3.js';
+import {accountSelector} from '../store/selectors/web3';
+import {tokenNameSelector} from '../store/selectors/contracts';
 
 class Navbar extends Component {
 
@@ -12,6 +14,19 @@ class Navbar extends Component {
                     <span className="navbar-toggler-icon"></span>
                 </button>
                 <ul className="navbar-nav ml-auto">
+                    <li className="nav-item">
+                    <Dropdown>
+                        <Dropdown.Toggle size="sm" id="dropdown-basic">
+                            {this.props.tokenName}/ETH
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                    </li>
                     <li className="nav-item">
                         <a 
                             className="nav-link small"
@@ -31,7 +46,8 @@ class Navbar extends Component {
 
 function mapStateToProps(state){
     return {
-        account: accountSelector(state)
+        account: accountSelector(state),
+        tokenName: tokenNameSelector(state)
     }
 }
 
