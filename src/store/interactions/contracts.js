@@ -29,20 +29,26 @@ export const loadExchange = async (web3, networkId, dispatch) => {
     return null;
 }
 
-export const loadBalances = async (web3, exchange, token, account, dispatch) => {
+export const loadEtherBalances = async (web3, exchange, account, dispatch) => {
     dispatch(balancesLoading());
-    
+
     //ether balance
     const etherBalance = await web3.eth.getBalance(account);
     dispatch(etherBalanceLoaded(etherBalance));
 
-    //token balance
-    const tokenBalance = await token.methods.balanceOf(account).call();
-    dispatch(tokenBalanceLoaded(tokenBalance));
-    
     //balance of account on the smart contract
     const exchangeEtherBalance = await exchange.methods.balanceOf(ETHER_ADDRESS, account).call();
     dispatch(exchangeEtherBalanceLoaded(exchangeEtherBalance));
+
+    dispatch(balancesLoaded());
+}
+
+export const loadTokenBalances = async (web3, exchange, token, account, dispatch) => {
+    dispatch(balancesLoading());
+
+    //token balance
+    const tokenBalance = await token.methods.balanceOf(account).call();
+    dispatch(tokenBalanceLoaded(tokenBalance));
 
     //token balance of account on the smart contract
     const exchangeTokenBalance = await exchange.methods.balanceOf(token.options.address, account).call();
@@ -51,11 +57,20 @@ export const loadBalances = async (web3, exchange, token, account, dispatch) => 
     dispatch(balancesLoaded());
 }
 
+export const loadBalances = async (web3, exchange, token, account, dispatch) => {
+    loadEtherBalances(web3, exchange, account, dispatch);
+    loadTokenBalances(web3, exchange, token, account, dispatch);
+}
+
 export const depositEther = async (web3, exchange, account, etherDepositAmount, dispatch) => {
     const amount = web3.utils.toWei(etherDepositAmount, 'ether');
     exchange.methods.depositEther.send({from: account, value: amount})
         .on('transactionHash', (hash) => {
             dispatch(balancesLoading());
+        })
+        .on('receipt', (hash) => {
+            console.log('receipt');
+            loadEtherBalances(web3, exchange, account, dispatch);
         })
         .on('error', (err) => {
             console.log(err);
@@ -69,6 +84,10 @@ export const withdrawEther = async (web3, exchange, account, etherWithdrawAmount
         .on('transactionHash', (hash) => {
             dispatch(balancesLoading());
         })
+        .on('receipt', (hash) => {
+            console.log('receipt');
+            loadEtherBalances(web3, exchange, account, dispatch);
+        })
         .on('error', (err) => {
             console.log(err);
             window.alert("error withdrawing");
@@ -77,14 +96,21 @@ export const withdrawEther = async (web3, exchange, account, etherWithdrawAmount
 
 export const depositToken = async (web3, exchange, token, account, etherWithdrawAmount, dispatch) => {
     const amount = web3.utils.toWei(etherWithdrawAmount, 'ether');
-
+    console.log('starting');
     token.methods.approve(exchange.options.address, amount).send({from: account})
         .on('transactionHash', (hash) => {
+            console.log('approved transaction');
             exchange.methods.depositToken(token.options.address, amount).send({from: account})
                 .on('transactionHash', (hash) => {
+                    console.log('transaction hash');
                     dispatch(balancesLoading());
                 })
+                .on('receipt', (hash) => {
+                    console.log('receipt');
+                    loadTokenBalances(web3, exchange, token, account, dispatch);
+                })
                 .on('error', (err) => {
+                    console.log('erroring deposit');
                     console.log(err);
                     window.alert("error depositing token");
                 });
@@ -96,6 +122,10 @@ export const withdrawToken = async (web3, exchange, token, account, tokenWithdra
     exchange.methods.withdrawToken(token.options.address, amount).send({from: account})
         .on('transactionHash', (hash) => {
             dispatch(balancesLoading());
+        })
+        .on('receipt', (hash) => {
+            console.log('receipt');
+            loadTokenBalances(web3, exchange, token, account, dispatch);
         })
         .on('error', (err) => {
             console.log(err);

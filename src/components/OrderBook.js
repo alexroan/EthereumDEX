@@ -2,14 +2,14 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {OverlayTrigger, Tooltip} from 'react-bootstrap';
 import {orderBookLoadedSelector, orderBookSelector, orderFillingSelector} from '../store/selectors/orders';
-import {exchangeSelector, tokenNameSelector} from '../store/selectors/contracts';
-import {accountSelector} from '../store/selectors/web3';
+import {exchangeSelector, tokenNameSelector, tokenSelector} from '../store/selectors/contracts';
+import {accountSelector, web3Selector} from '../store/selectors/web3';
 
 import Spinner from './Spinner';
 import { fillOrder } from '../store/interactions/orders';
 
 const renderOrder = (order, props) => {
-    const { dispatch, exchange, account} = props;
+    const { dispatch, exchange, account, web3, token} = props;
     return (
         <OverlayTrigger key={order._id} placement='auto' 
             overlay={
@@ -18,7 +18,7 @@ const renderOrder = (order, props) => {
                 </Tooltip>
             }
         >
-            <tr key={order._id} className="order-book-order" onClick={(e) => fillOrder(dispatch, exchange, order, account)}>
+            <tr key={order._id} className="order-book-order" onClick={(e) => fillOrder(dispatch, exchange, order, account, web3, token)}>
                 <td>{order.tokenAmount}</td>
                 <td className={`text-${order.orderTypeClass}`}>{order.tokenPrice}</td>
                 <td>{order.etherAmount}</td>
@@ -70,7 +70,9 @@ function mapStateToProps(state){
         showOrderBook: orderBookLoaded && !orderFilling,
         exchange: exchangeSelector(state),
         account: accountSelector(state),
-        tokenName: tokenNameSelector(state)
+        tokenName: tokenNameSelector(state),
+        web3: web3Selector(state),
+        token: tokenSelector(state)
     }
 }
 

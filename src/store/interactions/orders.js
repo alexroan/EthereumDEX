@@ -7,6 +7,7 @@ import {
     buyOrderMaking
 } from "../actions";
 import {ETHER_ADDRESS} from '../../helpers';
+import { loadBalances } from "./contracts";
 
 export const loadAllOrders = async (dispatch, exchange) => {
     try{
@@ -41,11 +42,14 @@ export const cancelOrder = (dispatch, exchange, order, account) => {
         })
 }
 
-export const fillOrder = (dispatch, exchange, order, account) => {
+export const fillOrder = (dispatch, exchange, order, account, web3, token) => {
     exchange.methods.fillOrder(order._id).send({from: account})
         //only dispatch the redux action once the hash has come back from the blockchain
         .on('transactionHash', (hash) => {
             dispatch(orderFilling());
+        })
+        .on('receipt', (hash) => {
+            loadBalances(web3, exchange, token, account, dispatch);
         })
         .on('error', (error) => {
             console.log(error);
