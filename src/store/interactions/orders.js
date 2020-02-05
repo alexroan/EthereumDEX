@@ -9,18 +9,27 @@ import {
 import {ETHER_ADDRESS} from '../../helpers';
 import { loadBalances } from "./contracts";
 
-export const loadAllOrders = async (dispatch, exchange) => {
+export const loadAllOrders = async (dispatch, exchange, token) => {
     try{
         // Cancelled
-        const cancelStream = await exchange.getPastEvents("Cancel", {fromBlock: 0, toBlock: 'latest'});
+        const cancelStream = await exchange.getPastEvents("Cancel", {fromBlock: 0, toBlock: 'latest', filter: {
+            _tokenGive: [token.address, ETHER_ADDRESS],
+            _tokenGet: [token.address, ETHER_ADDRESS]
+        }});
         const cancelledOrders = cancelStream.map((event) => event.returnValues);
         dispatch(cancelledOrdersLoaded(cancelledOrders));
         // Trade events (filles)
-        const tradeStream = await exchange.getPastEvents("Trade", {fromBlock: 0, toBlock: 'latest'});
+        const tradeStream = await exchange.getPastEvents("Trade", {fromBlock: 0, toBlock: 'latest', filter: {
+            _tokenGive: [token.address, ETHER_ADDRESS],
+            _tokenGet: [token.address, ETHER_ADDRESS]
+        }});
         const trades = tradeStream.map((event) => event.returnValues);
         dispatch(tradesLoaded(trades));
         // Open orders
-        const orderStream = await exchange.getPastEvents("Order", {fromBlock: 0, toBlock: 'latest'});
+        const orderStream = await exchange.getPastEvents("Order", {fromBlock: 0, toBlock: 'latest', filter: {
+            _tokenGive: [token.address, ETHER_ADDRESS],
+            _tokenGet: [token.address, ETHER_ADDRESS]
+        }});
         const orders = orderStream.map((event) => event.returnValues);
         dispatch(ordersLoaded(orders));
 

@@ -1,7 +1,7 @@
 import {tokens, EVM_REVERT, ETHER_ADDRESS, ether} from './helpers';
 
 const Exchange = artifacts.require('./Exchange');
-const Token = artifacts.require('./Token');
+const Token = artifacts.require('./MyERC20');
 
 require('chai')
     .use(require('chai-as-promised'))

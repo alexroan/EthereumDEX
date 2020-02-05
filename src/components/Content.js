@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { exchangeSelector } from '../store/selectors/contracts';
+import { exchangeSelector, tokenSelector } from '../store/selectors/contracts';
 import { subscribeToEvents } from '../store/interactions/subscriptions';
 import { loadAllOrders } from '../store/interactions/orders';
 import Trades from './Trades';
@@ -17,8 +17,8 @@ class Content extends Component {
 	}
 
 	async loadBlockchainData(props) {
-        const {exchange, dispatch} = props;
-        await loadAllOrders(dispatch, exchange);
+        const {exchange, dispatch, token} = props;
+        await loadAllOrders(dispatch, exchange, token);
         await subscribeToEvents(dispatch, exchange);
 	}
 
@@ -42,7 +42,8 @@ class Content extends Component {
 
 function mapStateToProps(state) {
     return {
-        exchange: exchangeSelector(state)
+        exchange: exchangeSelector(state),
+        token: tokenSelector(state)
     }
 }
 
