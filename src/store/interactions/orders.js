@@ -12,25 +12,37 @@ import { loadBalances } from "./contracts";
 export const loadAllOrders = async (dispatch, exchange, token) => {
     try{
         // Cancelled
-        const cancelStream = await exchange.getPastEvents("Cancel", {fromBlock: 0, toBlock: 'latest', filter: {
-            _tokenGive: [token.address, ETHER_ADDRESS],
-            _tokenGet: [token.address, ETHER_ADDRESS]
-        }});
-        const cancelledOrders = cancelStream.map((event) => event.returnValues);
+        const cancelStream = await exchange.getPastEvents("Cancel", {fromBlock: 0, toBlock: 'latest'});
+        let cancelledOrders = cancelStream.map((event) => event.returnValues);
+        cancelledOrders = cancelledOrders.filter(function(order) {
+            if ((order._tokenGive === ETHER_ADDRESS || order._tokenGive === token.address)
+                && (order._tokenGet === ETHER_ADDRESS || order._tokenGet === token.address)){
+                return true
+            }
+            return false;
+        });
         dispatch(cancelledOrdersLoaded(cancelledOrders));
         // Trade events (filles)
-        const tradeStream = await exchange.getPastEvents("Trade", {fromBlock: 0, toBlock: 'latest', filter: {
-            _tokenGive: [token.address, ETHER_ADDRESS],
-            _tokenGet: [token.address, ETHER_ADDRESS]
-        }});
-        const trades = tradeStream.map((event) => event.returnValues);
+        const tradeStream = await exchange.getPastEvents("Trade", {fromBlock: 0, toBlock: 'latest'});
+        let trades = tradeStream.map((event) => event.returnValues);
+        trades = trades.filter(function(order) {
+            if ((order._tokenGive === ETHER_ADDRESS || order._tokenGive === token.address)
+                && (order._tokenGet === ETHER_ADDRESS || order._tokenGet === token.address)){
+                return true
+            }
+            return false;
+        });
         dispatch(tradesLoaded(trades));
         // Open orders
-        const orderStream = await exchange.getPastEvents("Order", {fromBlock: 0, toBlock: 'latest', filter: {
-            _tokenGive: [token.address, ETHER_ADDRESS],
-            _tokenGet: [token.address, ETHER_ADDRESS]
-        }});
-        const orders = orderStream.map((event) => event.returnValues);
+        const orderStream = await exchange.getPastEvents("Order", {fromBlock: 0, toBlock: 'latest'});
+        let orders = orderStream.map((event) => event.returnValues);
+        orders = orders.filter(function(order) {
+            if ((order._tokenGive === ETHER_ADDRESS || order._tokenGive === token.address)
+                && (order._tokenGet === ETHER_ADDRESS || order._tokenGet === token.address)){
+                return true
+            }
+            return false;
+        });
         dispatch(ordersLoaded(orders));
 
     }

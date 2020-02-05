@@ -31,11 +31,11 @@ contract Exchange {
     //events
     event Deposit(address _token, address _user, uint256 _amount, uint256 _balance);
     event Withdraw(address _token, address _user, uint256 _amount, uint256 _balance);
-    event Order(uint256 _id, address _user, address indexed _tokenGet, uint256 _amountGet, address indexed _tokenGive, uint256 _amountGive,
+    event Order(uint256 _id, address _user, address _tokenGet, uint256 _amountGet,
+        address _tokenGive, uint256 _amountGive, uint256 _timestamp);
+    event Cancel(uint256 _id, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive,
         uint256 _timestamp);
-    event Cancel(uint256 _id, address _user, address indexed _tokenGet, uint256 _amountGet, address indexed _tokenGive, uint256 _amountGive,
-        uint256 _timestamp);
-    event Trade(uint256 _id, address _user, address indexed _tokenGet, uint256 _amountGet, address indexed _tokenGive, uint256 _amountGive,
+    event Trade(uint256 _id, address _user, address _tokenGet, uint256 _amountGet, address _tokenGive, uint256 _amountGive,
         address _userFill, uint256 _timestamp);
 
 

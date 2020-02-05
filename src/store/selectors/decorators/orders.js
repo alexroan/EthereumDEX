@@ -93,6 +93,7 @@ const decorateOrder = (order) => {
 
     const precision = 100000;
     let tokenPrice = (etherAmount / tokenAmount);
+    console.log(order, etherAmount, tokenAmount, tokenPrice);
     tokenPrice = Math.round(tokenPrice * precision) / precision;
 
     return({
