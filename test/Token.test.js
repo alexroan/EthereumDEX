@@ -1,22 +1,22 @@
 import {tokens, EVM_REVERT} from './helpers';
 
-const Token = artifacts.require('./Token');
+const MyERC20 = artifacts.require('./MyERC20');
 
 require('chai')
     .use(require('chai-as-promised'))
     .should();
 
-contract('Token', ([deployer, receiver, exchange]) => {
+contract('MyERC20', ([deployer, receiver, exchange]) => {
     let token;
     const totalSupply = tokens(1000000).toString();
 
     beforeEach(async () => {
-        token = await Token.new();
+        token = await MyERC20.new();
     });
 
     describe('deployment', () => {
-        const name = "Token Name";
-        const symbol = "TOK";
+        const name = "MyERC20";
+        const symbol = "MERC";
         const decimals = "18";
         
 
@@ -96,9 +96,9 @@ contract('Token', ([deployer, receiver, exchange]) => {
                 let eventLog = result.logs[0];
                 eventLog.event.should.equal('Transfer');
                 let args = eventLog.args;
-                args._from.should.equal(deployer);
-                args._to.should.equal(receiver);
-                args._value.toString().should.equal(amount.toString());
+                args.from.should.equal(deployer);
+                args.to.should.equal(receiver);
+                args.value.toString().should.equal(amount.toString());
             });
         });
     });
@@ -122,9 +122,9 @@ contract('Token', ([deployer, receiver, exchange]) => {
                 let eventLog = result.logs[0];
                 eventLog.event.should.equal('Approval');
                 let args = eventLog.args;
-                args._owner.should.equal(deployer);
-                args._spender.should.equal(exchange);
-                args._value.toString().should.equal(amount.toString());
+                args.owner.should.equal(deployer);
+                args.spender.should.equal(exchange);
+                args.value.toString().should.equal(amount.toString());
             });
         });
 
@@ -197,9 +197,9 @@ contract('Token', ([deployer, receiver, exchange]) => {
                 let eventLog = result.logs[0];
                 eventLog.event.should.equal('Transfer');
                 let args = eventLog.args;
-                args._from.should.equal(deployer);
-                args._to.should.equal(receiver);
-                args._value.toString().should.equal(amount.toString());
+                args.from.should.equal(deployer);
+                args.to.should.equal(receiver);
+                args.value.toString().should.equal(amount.toString());
             });
         });
     });

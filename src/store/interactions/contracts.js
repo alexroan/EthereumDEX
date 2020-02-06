@@ -1,6 +1,5 @@
 import {tokenLoaded, exchangeLoaded, tokenBalanceLoaded, exchangeEtherBalanceLoaded, exchangeTokenBalanceLoaded, balancesLoaded, balancesLoading} from '../actions';
 import MyERC20 from '../../abis/MyERC20.json';
-import Token from '../../abis/Token.json';
 import Exchange from '../../abis/Exchange.json';
 import {ETHER_ADDRESS} from '../../helpers.js';
 import {etherBalanceLoaded} from '../actions';

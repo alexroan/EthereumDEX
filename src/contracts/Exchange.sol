@@ -1,6 +1,6 @@
 pragma solidity ^0.5.0;
 
-import "./Token.sol";
+import "./MyERC20.sol";
 import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 
 contract Exchange {
@@ -106,7 +106,7 @@ contract Exchange {
         //don't allow ether deposits
         require(_tokenAddress != ETHER, "Can't send ether to this function");
         //require this so we only continue if transfer occurs
-        require(Token(_tokenAddress).transferFrom(msg.sender, address(this), _amount), "Could not transfer");
+        require(MyERC20(_tokenAddress).transferFrom(msg.sender, address(this), _amount), "Could not transfer");
         //add to balance
         tokens[_tokenAddress][msg.sender] = tokens[_tokenAddress][msg.sender].add(_amount);
         //emit event
@@ -122,7 +122,7 @@ contract Exchange {
         //subtract tokens
         tokens[_tokenAddress][msg.sender] = tokens[_tokenAddress][msg.sender].sub(_amount);
         //send tokens and require the transfer goes through
-        require(Token(_tokenAddress).transfer(msg.sender, _amount), "Could not transfer");
+        require(MyERC20(_tokenAddress).transfer(msg.sender, _amount), "Could not transfer");
         //emit event
         emit Withdraw(_tokenAddress, msg.sender, _amount, tokens[_tokenAddress][msg.sender]);
     }
