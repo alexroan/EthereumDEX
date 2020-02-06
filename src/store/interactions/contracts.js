@@ -1,18 +1,40 @@
-import {tokenLoaded, exchangeLoaded, tokenBalanceLoaded, exchangeEtherBalanceLoaded, exchangeTokenBalanceLoaded, balancesLoaded, balancesLoading} from '../actions';
+import {tokenLoaded, 
+    exchangeLoaded, 
+    tokenBalanceLoaded, 
+    exchangeEtherBalanceLoaded, 
+    exchangeTokenBalanceLoaded, 
+    balancesLoaded, 
+    balancesLoading,
+    pairsLoaded
+} from '../actions';
 import MyERC20 from '../../abis/MyERC20.json';
+import ERC20Detailed from '../../abis/ERC20Detailed.json';
 import Exchange from '../../abis/Exchange.json';
+import Pairs from '../../abis/Pairs.json';
 import {ETHER_ADDRESS} from '../../helpers.js';
 import {etherBalanceLoaded} from '../actions';
 
-export const loadToken = async (web3, networkId, dispatch) => {
+export const loadPairs = async (web3, networkId, dispatch) => {
     try{
-        const token = web3.eth.Contract(MyERC20.abi, MyERC20.networks[networkId].address);
+        const pairs = web3.eth.Contract(Pairs.abi, Pairs.networks[networkId].address);
+        dispatch(pairsLoaded(pairs));
+        return pairs;
+    }
+    catch (err){
+        window.alert("Pairs not deployed to the current network");
+    }
+    return null;
+}
+
+export const loadToken = async (web3, tokenAddress, dispatch) => {
+    try{
+        const token = web3.eth.Contract(ERC20Detailed.abi, tokenAddress);
         const name = await token.methods.symbol().call();
         dispatch(tokenLoaded(token, name));
         return token;
     }
     catch (err){
-        window.alert("Contract not deployed to current network");
+        window.alert("Token not deployed to current network");
     }
     return null;
 }
@@ -24,7 +46,7 @@ export const loadExchange = async (web3, networkId, dispatch) => {
         return exchange;
     }
     catch (err){
-        window.alert("Contract not deployed to current network");
+        window.alert("Exchange not deployed to current network");
     }
     return null;
 }

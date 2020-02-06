@@ -12,6 +12,13 @@ export function web3AccountLoaded(account){
     }
 }
 
+export function pairsLoaded(pairs){
+    return {
+        type: 'PAIRS_LOADED',
+        pairs
+    }
+}
+
 export function tokenLoaded(token, name){
     return {
         type: 'TOKEN_LOADED',
