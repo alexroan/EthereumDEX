@@ -1,18 +1,30 @@
 import React, {Component} from 'react';
 import {Dropdown} from 'react-bootstrap';
 import {connect} from 'react-redux';
-import {accountSelector} from '../store/selectors/web3';
-import {tokenNameSelector, pairsTokensSelector} from '../store/selectors/contracts';
+import {accountSelector, web3Selector} from '../store/selectors/web3';
+import {tokenNameSelector, pairsTokensSelector, exchangeSelector} from '../store/selectors/contracts';
+import { loadToken, loadBalances } from '../store/interactions/contracts';
+import { loadAllOrders } from '../store/interactions/orders';
+import { subscribeToEvents } from '../store/interactions/subscriptions';
 
-const renderMenuItem = (token) => {
-    console.log(token);
+const selectPairToken = async (tokenAddress, web3, exchange, account, dispatch) => {
+    const token = await loadToken(web3, tokenAddress, dispatch);
+    if (!token) {
+        alert('Token not loaded, please load a network with token');
+    }
+    await loadAllOrders(dispatch, exchange, token);
+    await subscribeToEvents(dispatch, exchange);
+    await loadBalances(web3, exchange, token, account, dispatch);
+}
+
+const renderMenuItem = (token, props) => {
+    const {web3, exchange, account, dispatch} = props;
     return (
-        <Dropdown.Item key={token[0]} href="#">{token[1]}/ETH</Dropdown.Item>
+        <Dropdown.Item key={token[0]} onClick={(e) => selectPairToken(token[0], web3, exchange, account, dispatch)} >{token[1]}/ETH</Dropdown.Item>
     )
 }
 
 class Navbar extends Component {
-
     render() {
         return (
             <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -28,7 +40,7 @@ class Navbar extends Component {
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            {this.props.pairsTokens.map((token) => renderMenuItem(token))}
+                            {this.props.pairsTokens.map((token) => renderMenuItem(token, this.props))}
                         </Dropdown.Menu>
                     </Dropdown>
                     </li>
@@ -52,7 +64,9 @@ function mapStateToProps(state){
     return {
         account: accountSelector(state),
         tokenName: tokenNameSelector(state),
-        pairsTokens: pairsTokensSelector(state)
+        pairsTokens: pairsTokensSelector(state),
+        exchange: exchangeSelector(state),
+        web3: web3Selector(state)
     }
 }
 
