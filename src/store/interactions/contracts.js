@@ -5,9 +5,12 @@ import {tokenLoaded,
     exchangeTokenBalanceLoaded, 
     balancesLoaded, 
     balancesLoading,
-    pairsLoaded
+    pairsLoaded,
+    availableTokensLoading,
+    availableTokensLoaded,
+    numberOfTokensLoaded,
+    tokenPairsLoaded
 } from '../actions';
-import MyERC20 from '../../abis/MyERC20.json';
 import ERC20Detailed from '../../abis/ERC20Detailed.json';
 import Exchange from '../../abis/Exchange.json';
 import Pairs from '../../abis/Pairs.json';
@@ -49,6 +52,22 @@ export const loadExchange = async (web3, networkId, dispatch) => {
         window.alert("Exchange not deployed to current network");
     }
     return null;
+}
+
+export const loadAvailableTokens = async (web3, pairs, dispatch) => {
+    dispatch(availableTokensLoading());
+
+    const numberOfTokens = await pairs.methods.size().call();
+    dispatch(numberOfTokensLoaded(numberOfTokens));
+
+    let tokenPairs = [];
+    for (let i = 0; i < numberOfTokens; i++) {
+        let tokenAddress = await pairs.methods.addresses(i).call();
+        tokenPairs.push(tokenAddress);
+    }
+    dispatch(tokenPairsLoaded(tokenPairs));
+
+    dispatch(availableTokensLoaded());
 }
 
 export const loadEtherBalances = async (web3, exchange, account, dispatch) => {

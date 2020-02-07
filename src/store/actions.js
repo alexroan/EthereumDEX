@@ -19,6 +19,32 @@ export function pairsLoaded(pairs){
     }
 }
 
+export function availableTokensLoading(){
+    return {
+        type: 'AVAILABLE_TOKENS_LOADING'
+    }
+}
+
+export function availableTokensLoaded(){
+    return {
+        type: 'AVAILABLE_TOKENS_LOADED'
+    }
+}
+
+export function numberOfTokensLoaded(numberOfTokens){
+    return {
+        type: 'NUMBER_OF_TOKENS_LOADED',
+        numberOfTokens
+    }
+}
+
+export function tokenPairsLoaded(pairs){
+    return {
+        type: 'TOKEN_PAIRS_LOADED',
+        pairs
+    }
+}
+
 export function tokenLoaded(token, name){
     return {
         type: 'TOKEN_LOADED',

@@ -17,6 +17,14 @@ function pairs(state = {}, action) {
     switch(action.type) {
         case 'PAIRS_LOADED':
             return { ...state, contract: action.pairs };
+        case 'AVAILABLE_TOKENS_LOADING':
+            return { ...state, loaded: false };
+        case 'AVAILABLE_TOKENS_LOADED':
+            return { ...state, loaded: true };
+        case 'NUMBER_OF_TOKENS_LOADED':
+            return { ...state, number: action.numberOfTokens };
+        case 'TOKEN_PAIRS_LOADED':
+            return { ...state, tokens: action.pairs};
         default:
             return state;
     }

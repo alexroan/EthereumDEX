@@ -4,7 +4,7 @@ import Navbar from './Navbar';
 import Content from './Content';
 import {connect} from 'react-redux';
 import {loadWeb3, loadAccount} from '../store/interactions/web3';
-import {loadToken, loadExchange, loadPairs} from '../store/interactions/contracts';
+import {loadToken, loadExchange, loadPairs, loadAvailableTokens} from '../store/interactions/contracts';
 import { contractsLoadedSelector } from '../store/selectors/contracts';
 
 
@@ -40,6 +40,7 @@ class App extends Component {
 		if (!exchange) {
 			alert('Exchange not loaded, please load a network with exchange');
 		}
+		await loadAvailableTokens(web3, pairs, dispatch);
 	}
 	
 	render() {
