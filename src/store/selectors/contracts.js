@@ -54,3 +54,9 @@ export const tokenDepositAmountSelector = createSelector(tokenDepositAmount, tda
 
 const tokenWithdrawAmount = state => get(state, 'exchange.tokenWithdrawAmount', 0);
 export const tokenWithdrawAmountSelector = createSelector(tokenWithdrawAmount, twa => twa);
+
+const pairsLoaded = state => get(state, 'pairs.loaded', false);
+export const pairsLoadedSelector = createSelector(pairsLoaded, pl => pl);
+
+const pairsTokens = state => get(state, 'pairs.tokens', []);
+export const pairsTokensSelector = createSelector(pairsTokens, pls => pls);

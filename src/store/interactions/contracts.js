@@ -63,7 +63,10 @@ export const loadAvailableTokens = async (web3, pairs, dispatch) => {
     let tokenPairs = [];
     for (let i = 0; i < numberOfTokens; i++) {
         let tokenAddress = await pairs.methods.addresses(i).call();
-        tokenPairs.push(tokenAddress);
+        let token = web3.eth.Contract(ERC20Detailed.abi, tokenAddress);
+        let name = await token.methods.symbol().call();
+
+        tokenPairs.push([tokenAddress, name]);
     }
     dispatch(tokenPairsLoaded(tokenPairs));
 

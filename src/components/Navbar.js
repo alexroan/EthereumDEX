@@ -2,7 +2,14 @@ import React, {Component} from 'react';
 import {Dropdown} from 'react-bootstrap';
 import {connect} from 'react-redux';
 import {accountSelector} from '../store/selectors/web3';
-import {tokenNameSelector} from '../store/selectors/contracts';
+import {tokenNameSelector, pairsTokensSelector} from '../store/selectors/contracts';
+
+const renderMenuItem = (token) => {
+    console.log(token);
+    return (
+        <Dropdown.Item key={token[0]} href="#">{token[1]}/ETH</Dropdown.Item>
+    )
+}
 
 class Navbar extends Component {
 
@@ -21,9 +28,7 @@ class Navbar extends Component {
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            {/* <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item> */}
+                            {this.props.pairsTokens.map((token) => renderMenuItem(token))}
                         </Dropdown.Menu>
                     </Dropdown>
                     </li>
@@ -41,13 +46,13 @@ class Navbar extends Component {
             </nav>
         );
     }
-
 }
 
 function mapStateToProps(state){
     return {
         account: accountSelector(state),
-        tokenName: tokenNameSelector(state)
+        tokenName: tokenNameSelector(state),
+        pairsTokens: pairsTokensSelector(state)
     }
 }
 
