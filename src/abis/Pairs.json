@@ -1754,6 +1754,36 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {
+    "42": {
+      "events": {
+        "0x40716b676f9ef2268d8b0dc199feb199cec4e882bacdb805db988a5b9f3b7dce": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "tokenAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "symbol",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "name": "user",
+              "type": "address"
+            }
+          ],
+          "name": "NewAddress",
+          "type": "event",
+          "signature": "0x40716b676f9ef2268d8b0dc199feb199cec4e882bacdb805db988a5b9f3b7dce"
+        }
+      },
+      "links": {},
+      "address": "0x158f3C4b897cA69Ff6c383197E3Da4D9ef82E93B",
+      "transactionHash": "0xc09cee1d96357748d6b1299166085df8c1631483950b7f6300c3f9775494cb0b"
+    },
     "5777": {
       "events": {
         "0x40716b676f9ef2268d8b0dc199feb199cec4e882bacdb805db988a5b9f3b7dce": {
@@ -1816,7 +1846,7 @@
     }
   },
   "schemaVersion": "3.0.2",
-  "updatedAt": "2020-02-07T15:10:20.069Z",
+  "updatedAt": "2020-02-07T20:29:54.757Z",
   "devdoc": {
     "methods": {}
   },

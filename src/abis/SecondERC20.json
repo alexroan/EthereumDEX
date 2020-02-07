@@ -1190,15 +1190,68 @@
     "version": "0.5.0+commit.1d4f565a.Emscripten.clang"
   },
   "networks": {
-    "5777": {
+    "42": {
       "events": {},
+      "links": {},
+      "address": "0x654296786Ff3200a706E9EA431D30718C69a9920",
+      "transactionHash": "0xec90c60bc44e78c4983af1e138d8ab24a109b3d7061fa7a2c03c8eb65f83b4cf"
+    },
+    "5777": {
+      "events": {
+        "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "to",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Transfer",
+          "type": "event",
+          "signature": "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+        },
+        "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "owner",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "spender",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "value",
+              "type": "uint256"
+            }
+          ],
+          "name": "Approval",
+          "type": "event",
+          "signature": "0x8c5be1e5ebec7d5bd14f71427d1e84f3dd0314c0f7b2291e5b200ac8c7c3b925"
+        }
+      },
       "links": {},
       "address": "0xdfEd63F75cc01601AB2caD31CDDa6511E166562c",
       "transactionHash": "0x31d9cdaaa31949956db226384f18f85702bf39934503fff6872b68b503b4b3c1"
     }
   },
   "schemaVersion": "3.0.2",
-  "updatedAt": "2020-02-07T15:10:20.068Z",
+  "updatedAt": "2020-02-07T20:29:54.754Z",
   "devdoc": {
     "methods": {
       "allowance(address,address)": {
